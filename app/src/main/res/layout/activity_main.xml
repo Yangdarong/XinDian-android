@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f3f3f3"
+        android:layout_above="@+id/tabs_rg"/>
+
+    <RadioGroup
+        android:id="@+id/tabs_rg"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_alignParentBottom="true"
+        android:background="#dcdcdc"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/home_tab"
+            style="@style/Custom.TabRadioButton"
+            android:checked="true"
+            android:drawableTop="@drawable/tab_home_selector"
+            android:text="@string/title_home" />
+
+        <RadioButton
+            android:id="@+id/star_tab"
+            style="@style/Custom.TabRadioButton"
+            android:drawableTop="@drawable/tab_star_selector"
+            android:text="@string/title_star" />
+
+        <View style="@style/Custom.TabRadioButton" />
+
+        <RadioButton
+            android:id="@+id/food_tab"
+            style="@style/Custom.TabRadioButton"
+            android:drawableTop="@drawable/tab_food_selector"
+            android:text="@string/title_food" />
+
+        <RadioButton
+            android:id="@+id/info_tab"
+            style="@style/Custom.TabRadioButton"
+            android:drawableTop="@drawable/tab_info_selector"
+            android:text="@string/title_info"/>
+
+    </RadioGroup>
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/tab_adv_logo"/>
+</RelativeLayout>
