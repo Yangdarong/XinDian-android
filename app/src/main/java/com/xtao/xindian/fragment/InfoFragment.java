@@ -1,5 +1,6 @@
 package com.xtao.xindian.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -9,17 +10,22 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.xtao.xindian.LoginActivity;
 import com.xtao.xindian.R;
+import com.xtao.xindian.pojo.TbUser;
 
 public class InfoFragment extends Fragment {
     private TextView tvTitleName;
 
     private LinearLayout llUserLogin;
 
+    private Intent intent;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.fragment_info, container, false);
+
 
         initView(mView);
         initData();
@@ -29,15 +35,24 @@ public class InfoFragment extends Fragment {
     }
 
     private void initListener() {
-        llUserLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        llUserLogin.setOnClickListener(mOnClickListener);
     }
 
+    View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Bundle bundle = intent.getExtras();
+
+            if (bundle == null) {
+                // 进入注册界面
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+            }
+        }
+    };
+
     private void initData() {
+        intent = getActivity().getIntent();
     }
 
     private void initView(View view) {
