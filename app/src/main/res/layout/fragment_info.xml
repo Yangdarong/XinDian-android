@@ -57,6 +57,19 @@
                     android:text="登录或注册"
                     android:textColor="#000"
                     android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="end">
+
+                    <ImageView
+                        android:layout_width="6dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="22dp"
+                        android:src="@drawable/iv_select_goto" />
+                </LinearLayout>
             </LinearLayout>
 
             <!--空布局-->
@@ -148,7 +161,7 @@
 
                         <ImageView
                             android:layout_width="6dp"
-                            android:layout_height="12dp"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="22dp"
                             android:src="@drawable/iv_select_goto" />

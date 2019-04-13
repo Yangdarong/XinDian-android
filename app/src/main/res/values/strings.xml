@@ -10,5 +10,7 @@
     <string name="title_food">我的美食</string>
     <string name="title_info">我的</string>
 
+    <!-- -->
+    <string name="welcome_user">欢迎你,%s</string>
 
 </resources>

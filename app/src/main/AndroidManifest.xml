@@ -30,6 +30,12 @@
             android:theme="@style/AppTheme.NoActionBarWithBackGround" />
         <activity
             android:name=".RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround" />
+        <activity
+            android:name=".activities.SetUserInfoActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround"></activity>
+        <activity
+            android:name=".activities.UserInfoActivity"
             android:theme="@style/AppTheme.NoActionBarWithBackGround"></activity>
     </application>
 

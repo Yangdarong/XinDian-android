@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -92,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            URL url = new URL("http://172.24.95.94:8080/xindian/test/queryUser.json");
+                            URL url = new URL("http://172.24.95.94:8080/xindian/user/queryUser.json");
                             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                             connection.setRequestMethod("POST");
@@ -126,6 +127,16 @@ public class LoginActivity extends AppCompatActivity {
                                 if (userResultType.getState() == 1) {   // 登录成功
                                     Looper.prepare();
                                     Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+
+
+                                    // 将用户实体带到主界面
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("userInformation", userResultType.getUser());
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.putExtras(bundle);
+
+                                    startActivity(intent);
+                                    finish();
                                     Looper.loop();
                                 } else {    // 账号密码不正确 或没有该用户
                                     Looper.prepare();
@@ -152,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initData() {
         tvTitleName.setText("登录");
+
     }
 
     private void initView() {

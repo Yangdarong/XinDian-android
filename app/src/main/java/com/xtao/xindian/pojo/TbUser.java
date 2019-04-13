@@ -1,11 +1,12 @@
 package com.xtao.xindian.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *  用户表
  */
-public class TbUser {
+public class TbUser implements Serializable {
 
     private int uId;
 

@@ -9,4 +9,8 @@
     <color name="colorTheme">#ed793d</color>
     <color name="white">#fff</color>
 
+    <color name="colorSameGreen">#32CD32</color>
+    <color name="colorDifferentRed">#EE0000</color>
+
+    <color name="fontGray">#969696</color>
 </resources>
