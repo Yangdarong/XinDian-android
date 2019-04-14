@@ -1,6 +1,5 @@
 package com.xtao.xindian.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.xtao.xindian.MainActivity;
 import com.xtao.xindian.R;
 import com.xtao.xindian.common.TitleResultType;
 import com.xtao.xindian.fragment.adapter.HomeTitleAdapter;
@@ -69,7 +67,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    URL url = new URL("http://172.24.95.94:8080/xindian/title/queryTitles.json");
+                    URL url = new URL("http://192.168.1.100:8080/xindian/title/queryTitles.json");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                     connection.setRequestMethod("POST");
