@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -25,10 +26,14 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton rbInfo;
 
     private FragmentManager mFragmentManager;
+    private FragmentTransaction transaction;
     private Fragment mHomeFragment;
     private Fragment mStarFragment;
     private Fragment mFoodFragment;
     private Fragment mInfoFragment;
+
+    private Fragment mFragmentText;
+    private SparseArray<Fragment> mFragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,32 +48,85 @@ public class MainActivity extends AppCompatActivity {
         rbTabs.setOnCheckedChangeListener(mOnCheckedChangeListener);
     }
 
+    private int mCheckId;
+
     // 设置底部导航栏监听事件
     RadioGroup.OnCheckedChangeListener mOnCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-            switch (checkedId) {
+            /*switch (checkedId) {
                 case R.id.home_tab:
-
-                    switchFragment(mHomeFragment);
+                    //switchFragment(mHomeFragment);
                     break;
                 case R.id.star_tab:
-                    switchFragment(mStarFragment);
+                    //switchFragment(mStarFragment);
                     break;
                 case R.id.food_tab:
-                    switchFragment(mFoodFragment);
+                    //switchFragment(mFoodFragment);
                     break;
                 case R.id.info_tab:
-                    switchFragment(mInfoFragment);
+                    //switchFragment(mInfoFragment);
                     break;
-            }
+            }*/
+
+            mCheckId = checkedId;
+            addFragment(mCheckId);
+            // 前一个fragment
+            mFragmentText = createFragment(mCheckId);
+
         }
     };
 
-    /**
-     * 切换Fragment的方法
-     * @param fragment
-     */
+    private void addFragment(int checkId) {
+        // 如果前一个fragment实例不为空
+        transaction = mFragmentManager.beginTransaction();
+        if (mFragmentText != null) {
+            // 且现有fragment 实例被添加过
+            if (createFragment(checkId).isAdded()) {
+                // 隐藏前一个实例
+                transaction
+                        .hide(mFragmentText)
+                        .show(createFragment(checkId))
+                        .commit();
+            } else {    // 隐藏钱一个实例,添加现有的实例
+
+                transaction
+                        .hide(mFragmentText)
+                        .add(R.id.fragment_container, createFragment(checkId))
+                        .commit();
+
+            }
+        } else {
+            transaction
+                    .add(R.id.fragment_container, createFragment(checkId))
+                    .commit();
+        }
+    }
+
+    // 切换
+    Fragment fragment = null;
+
+    private Fragment createFragment(int checkId) {
+        switch (checkId) {
+            case R.id.home_tab:
+                fragment = mFragments.get(0);
+                break;
+            case R.id.star_tab:
+                fragment = mFragments.get(1);
+                //switchFragment(mStarFragment);
+                break;
+            case R.id.food_tab:
+                fragment = mFragments.get(2);
+                //switchFragment(mFoodFragment);
+                break;
+            case R.id.info_tab:
+                fragment = mFragments.get(3);
+                //switchFragment(mInfoFragment);
+                break;
+        }
+        return fragment;
+    }
+
     private void switchFragment(Fragment fragment) {
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
@@ -88,5 +146,12 @@ public class MainActivity extends AppCompatActivity {
         mStarFragment = new StarFragment();
         mFoodFragment = new FoodFragment();
         mInfoFragment = new InfoFragment();
+        mFragments = new SparseArray();
+
+        mFragments.put(0, mHomeFragment);
+        mFragments.put(1, mStarFragment);
+        mFragments.put(2, mFoodFragment);
+        mFragments.put(3, mInfoFragment);
+
     }
 }

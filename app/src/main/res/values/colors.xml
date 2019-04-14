@@ -7,6 +7,7 @@
     <!--自定义颜色表-->
     <color name="CutOfLine">#f5f7f9</color>
     <color name="colorTheme">#ed793d</color>
+    <color name="colorHome">#FF7F24</color>
     <color name="white">#fff</color>
 
     <color name="colorSameGreen">#32CD32</color>

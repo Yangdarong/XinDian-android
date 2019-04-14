@@ -40,6 +40,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         /**
          * 正常情况下不点击进入用户首页
          */
+
         handler = new Handler();
         handler.postDelayed(runnable = new Runnable() {
             @Override
