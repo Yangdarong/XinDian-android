@@ -39,7 +39,11 @@
             android:theme="@style/AppTheme.NoActionBarWithBackGround" />
         <activity
             android:name=".activities.FoodInfoActivity"
-            android:theme="@style/AppTheme.NoActionBarWithBackGround"></activity>
+            android:theme="@style/AppTheme.NoActionBarWithBackGround" />
+        <activity
+            android:name=".activities.MyBuycarActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround">
+        </activity>
     </application>
 
 </manifest>
