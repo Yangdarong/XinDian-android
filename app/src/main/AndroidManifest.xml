@@ -41,7 +41,7 @@
             android:name=".activities.FoodInfoActivity"
             android:theme="@style/AppTheme.NoActionBarWithBackGround" />
         <activity
-            android:name=".activities.MyBuycarActivity"
+            android:name=".activities.BuycarSettleActivity"
             android:theme="@style/AppTheme.NoActionBarWithBackGround">
         </activity>
     </application>

@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.xtao.xindian.fragment.FoodFragment;
+import com.xtao.xindian.fragment.BuycarFragment;
 import com.xtao.xindian.fragment.HomeFragment;
 import com.xtao.xindian.fragment.InfoFragment;
 import com.xtao.xindian.fragment.StarFragment;
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
         mHomeFragment = new HomeFragment();
         mStarFragment = new StarFragment();
-        mFoodFragment = new FoodFragment();
+        mFoodFragment = new BuycarFragment();
         mInfoFragment = new InfoFragment();
         mFragments = new SparseArray();
 

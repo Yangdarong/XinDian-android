@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 
 import com.xtao.xindian.R;
 
-public class FoodFragment extends Fragment {
+public class BuycarFragment extends Fragment {
 
 
-    public FoodFragment() {
+    public BuycarFragment() {
         // Required empty public constructor
     }
 
@@ -21,6 +21,6 @@ public class FoodFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_food, container, false);
+        return inflater.inflate(R.layout.fragment_buycar, container, false);
     }
 }
