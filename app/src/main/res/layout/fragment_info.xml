@@ -142,8 +142,8 @@
                         android:layout_width="24dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/iv_my_news" />
 
                     <TextView
@@ -185,8 +185,8 @@
                         android:layout_width="24dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/iv_my_recent" />
 
                     <TextView
@@ -227,8 +227,8 @@
                         android:layout_width="24dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/iv_my_topic" />
 
                     <TextView
@@ -269,8 +269,8 @@
                         android:layout_width="24dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/iv_my_order" />
 
                     <TextView
@@ -316,8 +316,8 @@
                         android:layout_width="24dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/iv_my_collection" />
 
                     <TextView
@@ -358,8 +358,8 @@
                         android:layout_width="24dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/iv_my_download" />
 
                     <TextView
@@ -400,8 +400,8 @@
                         android:layout_width="24dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/iv_my_log" />
 
                     <TextView
@@ -446,8 +446,8 @@
                         android:layout_width="24dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/iv_my_purse" />
 
                     <TextView
@@ -489,8 +489,8 @@
                         android:layout_width="24dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/iv_my_buy" />
 
                     <TextView
@@ -531,8 +531,8 @@
                         android:layout_width="24dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/iv_my_trends" />
 
                     <TextView
@@ -573,8 +573,8 @@
                         android:layout_width="24dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/iv_my_va" />
 
                     <TextView
@@ -614,8 +614,8 @@
                     android:layout_width="24dp"
                     android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="12dp"
                     android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
                     android:src="@drawable/iv_my_idea" />
 
                 <TextView
