@@ -1,9 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activities.SetUserInfoActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <include layout="@layout/layout_title" />
+
+    <EditText
+        android:hint="测试测试文本"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="修 改"
+            android:paddingTop="10dp"
+            android:textSize="20sp"
+            android:background="@color/colorTheme"
+            android:textAlignment="center"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+</LinearLayout>
