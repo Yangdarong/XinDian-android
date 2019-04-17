@@ -42,8 +42,10 @@
             android:theme="@style/AppTheme.NoActionBarWithBackGround" />
         <activity
             android:name=".activities.BuycarSettleActivity"
-            android:theme="@style/AppTheme.NoActionBarWithBackGround">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBarWithBackGround"></activity>
+        <activity
+            android:name=".activities.HomeSearchActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround"></activity>
     </application>
 
 </manifest>
