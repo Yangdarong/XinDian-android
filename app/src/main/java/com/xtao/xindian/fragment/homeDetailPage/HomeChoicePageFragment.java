@@ -36,7 +36,7 @@ public class HomeChoicePageFragment extends Fragment {
     private List<View> mDots;               // 小点
 
     private boolean isStop = false;         // 线程是否停止
-    private static int PAGER_TIME = 5000;   // 间隔时间
+    private static int PAGER_TIME = 8000;   // 间隔时间
 
     private int[] imgae_ids = new int[]{R.id.pager_image1,R.id.pager_image2,R.id.pager_image3,R.id.pager_image4};
 

@@ -18,7 +18,7 @@
             android:background="#FFF">
 
             <ImageView
-                android:id="@+id/iv_title_bk"
+                android:id="@+id/iv_food_info_bk"
                 android:layout_width="40dp"
                 android:layout_height="25dp"
                 android:layout_alignParentStart="true"
@@ -26,7 +26,7 @@
                 android:src="@drawable/pic_sys_back" />
 
             <TextView
-                android:id="@+id/tv_title_name"
+                android:id="@+id/tv_title_food_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:ellipsize="marquee"
@@ -35,13 +35,6 @@
                 android:textColor="#000"
                 android:textSize="22sp" />
 
-            <ImageView
-                android:id="@+id/iv_title_pic"
-                android:layout_width="40dp"
-                android:layout_height="42dp"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="10dp"
-                android:src="@drawable/pic_sys_setting" />
         </RelativeLayout>
 
         <ScrollView
@@ -54,39 +47,49 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/iv_food_info_pic"
                     android:layout_width="match_parent"
-                    android:layout_height="380dp"
+                    android:layout_height="300dp"
                     android:src="@drawable/test" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:background="#DC143C">
 
-                    <com.xtao.xindian.view.CircleImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="15dp"
-                        android:src="@drawable/test" />
-
-                    <LinearLayout
+                    <TextView
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="15dp"
-                            android:text="有间客栈" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="aaaaaaaaaaaaaaaaaaaaaa" />
-                    </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:text="￥"/>
+                    <TextView
+                        android:id="@+id/tv_food_info_dprice"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="99.9"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"/>
+                    <TextView
+                        android:layout_marginTop="2dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="￥"
+                        android:textColor="#D1D1D1"
+                        android:textSize="13sp"/>
+                    <TextView
+                        android:id="@+id/tv_food_info_price"
+                        android:layout_marginTop="2dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="999"
+                        android:textColor="#D1D1D1"
+                        android:textSize="13sp"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -95,76 +98,143 @@
                         android:orientation="vertical">
 
                         <ImageView
+                            android:id="@+id/iv_food_info_follow"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="end"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginEnd="10dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginEnd="12dp"
                             android:src="@drawable/pic_follow" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="10dp"
+                    android:id="@+id/tv_food_info_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:background="@color/white"
                     android:text="秋葵土豆泥"
                     android:textColor="#000"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="5dp"
-                    android:text="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
+                    android:id="@+id/tv_food_info_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:paddingStart="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="XXX" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.xtao.xindian.view.CircleImageView
+                        android:id="@+id/iv_food_mer_pic"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/test" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_food_mer_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="15dp"
+                            android:text="有间客栈" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_gravity="end"
+                            android:layout_marginEnd="20dp"
+                            android:id="@+id/tv_food_mer_phone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:drawableStart="@drawable/pic_mer_telephone"
+                            android:text="15800000000" />
+
+                        <TextView
+                            android:layout_gravity="end"
+                            android:id="@+id/tv_food_mer_address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="20dp"
+                            android:text="地址" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_food_mer_intro"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/white"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:text="简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介" />
 
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
     
     <LinearLayout
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
-        >
-        
-        <TextView
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#F00"
-            android:textSize="16sp"
-            android:text="￥"/>
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="99.9"
-            android:textColor="#F00"
-            android:textSize="22sp"/>
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_weight="2"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="horizontal">
 
             <EditText
-                android:layout_gravity="end"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="12dp"
-                android:layout_width="65dp"
-                android:layout_height="30dp"
-                android:text="购买"
-                android:textColor="#f7cfab"
+                android:id="@+id/et_food_add_buycar"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:text="加入购物车"
+                android:textColor="#FFF"
                 android:focusable="false"
                 android:gravity="center"
-                android:background="@drawable/home_search_shape"/>
+                android:background="#EE4000"/>
+
+            <EditText
+                android:id="@+id/et_food_info_buy"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="购买"
+                android:textColor="@color/white"
+                android:focusable="false"
+                android:gravity="center"
+                android:background="#FFC125"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

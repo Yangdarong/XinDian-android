@@ -13,82 +13,109 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="#FFF">
 
-            <ImageView
-                android:id="@+id/iv_title_bk"
-                android:layout_width="40dp"
-                android:layout_height="25dp"
-                android:layout_alignParentStart="true"
-                android:layout_margin="10dp"
-                android:src="@drawable/pic_sys_back" />
-
             <TextView
-                android:id="@+id/tv_title_name"
+                android:id="@+id/tv_buycar_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:ellipsize="marquee"
                 android:gravity="center"
-                android:text="标题栏"
+                android:text="购物车()"
                 android:textColor="#000"
                 android:textSize="22sp" />
 
-            <ImageView
-                android:id="@+id/iv_title_pic"
-                android:layout_width="40dp"
-                android:layout_height="42dp"
+            <TextView
+                android:id="@+id/tv_buycar_admin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="10dp"
-                android:src="@drawable/pic_sys_setting" />
+                android:layout_margin="12dp"
+                android:text="管理"
+                android:textSize="16dp"/>
         </RelativeLayout>
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></ListView>
 
+        <TextView
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="购物车是空的,赶紧下单把~"
+            android:textSize="22sp"/>
+
+        <ExpandableListView
+            android:background="@color/CutOfLine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ExpandableListView>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@color/white"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#F00"
-            android:textSize="16sp"
-            android:text="￥"/>
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="99.9"
-            android:textColor="#F00"
-            android:textSize="22sp"/>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_weight="6">
+            <RadioButton
+                android:layout_marginStart="10dp"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="全选"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="删除"
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="#000"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:text="合计:"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:textColor="#F00"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:text="￥0.00"/>
+
 
             <EditText
-                android:layout_gravity="end"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="12dp"
-                android:layout_width="65dp"
-                android:layout_height="30dp"
-                android:text="购买"
-                android:textColor="#f7cfab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:text="结算()"
+                android:textColor="@color/white"
                 android:focusable="false"
                 android:gravity="center"
-                android:background="@drawable/home_search_shape"/>
+                android:background="#FFC125"/>
         </LinearLayout>
     </LinearLayout>
 

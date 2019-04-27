@@ -22,7 +22,6 @@ import com.xtao.xindian.activities.FoodInfoActivity;
 import com.xtao.xindian.common.FoodsResultType;
 import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.value.HttpURL;
-import com.xtao.xindian.fragment.adapter.FoodListAdapter;
 import com.xtao.xindian.pojo.TbFood;
 import com.xtao.xindian.view.CircleImageView;
 import com.xtao.xindian.view.RoundRectImageView;
@@ -36,22 +35,20 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
-public class HomeBakePageFragment extends Fragment {
+public class HomeDrinkPageFragment extends Fragment {
 
-    //    lv_snack_food_list
-    private ListView lvBakeFoodList;
-    //    数据源
+//    lv_drink_food_list
+    private ListView lvDrinkFoodList;
+//    数据源
     private List<TbFood> foods;
-    //    数据网络来源
+//    适配器
+    private FoodListAdapter mAdapter;
+//    数据网络来源
     private final String URL = HttpURL.IP_ADDRESS + "/food/getFoodsList.json";
 
-    private FoodListAdapter mAdapter;
-
     private ProgressDialog progressDialog;
-    private View view;
-    private Fragment fragment = null;
 
-    public HomeBakePageFragment() {
+    public HomeDrinkPageFragment() {
         // Required empty public constructor
     }
 
@@ -59,9 +56,9 @@ public class HomeBakePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_home_bake_page, container, false);
-        lvBakeFoodList = view.findViewById(R.id.lv_bake_food_list);
-        fragment = this;
+        View view = inflater.inflate(R.layout.fragment_home_drink_page, container, false);
+        lvDrinkFoodList = view.findViewById(R.id.lv_drink_food_list);
+
         initView();
         initData();
 
@@ -80,6 +77,91 @@ public class HomeBakePageFragment extends Fragment {
         new FlAsyncTask().execute(URL);
     }
 
+    private class FoodListAdapter extends BaseAdapter {
+        private LayoutInflater mLayoutInflater;
+        private TbFood food;
+        private String picUrl;
+
+        public FoodListAdapter(Context context) {
+            mLayoutInflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public int getCount() {
+            return foods.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return foods.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            convertView = mLayoutInflater.inflate(R.layout.food_item, null);
+            food = (TbFood) getItem(position);
+
+            RoundRectImageView picFood = convertView.findViewById(R.id.pic_food);
+            // 图片需要下载
+            if (food.getfUrl() == null || food.getfUrl().equals(""))  // 未设置图片
+                picUrl = HttpURL.FOOD_DEFAULT_PIC;
+            else     // 设置了图片
+                picUrl = food.getfUrl();
+            new BitmapTask().execute(picFood, picUrl);
+
+            TextView tvFoodName = convertView.findViewById(R.id.tv_food_name);
+            tvFoodName.setText(food.getfName());
+
+            TextView tvFoodType = convertView.findViewById(R.id.tv_food_type);
+            tvFoodType.setText(food.getFoodType().getFtName());
+
+            TextView tvFoodDprice = convertView.findViewById(R.id.tv_food_dprice);
+            String oPrice = tvFoodDprice.getText().toString();
+            String nPrice = oPrice.replace(oPrice.substring(1, oPrice.length()), food.getfDPrice().toString());
+
+            tvFoodDprice.setText(nPrice);
+
+            CircleImageView picUserIcon = convertView.findViewById(R.id.pic_user_icon);
+            if (food.getMer().getmUrl() == null || food.getMer().getmUrl().equals("")) {
+                picUrl = HttpURL.MER_DEFAULT_PIC;
+            } else {
+                picUrl = food.getMer().getmUrl();
+            }
+            new BitmapTask().execute(picUserIcon, picUrl);
+
+            TextView tvMerName = convertView.findViewById(R.id.tv_mer_name);
+            tvMerName.setText(food.getMer().getmName());
+
+//            et_food_buy 为按钮添加点击事件
+            EditText etFoodBuy = convertView.findViewById(R.id.et_food_buy);
+            View.OnClickListener doGetFoodInfoListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 获取菜品ID 存入bundle
+                    int fId = ((TbFood) getItem(position)).getfId();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("fId", fId);
+                    Intent intent = new Intent(getActivity(), FoodInfoActivity.class);
+                    intent.putExtras(bundle);
+                    // 页面跳转
+                    startActivity(intent);
+                    //Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
+                    Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                    //Toast.makeText(v.getContext(), "你拿到的菜品ID是:" + ((TbFood) getItem(position)).getfId(), Toast.LENGTH_SHORT).show();
+                }
+            };
+            etFoodBuy.setOnClickListener(doGetFoodInfoListener);
+
+            return convertView;
+        }
+
+    }
+
     private class FlAsyncTask extends AsyncTask<String, Integer, List<TbFood>> {
 
         @Override
@@ -94,8 +176,8 @@ public class HomeBakePageFragment extends Fragment {
 
             // 装配数据
             foods = tbFoods;
-            mAdapter = new FoodListAdapter(getContext(), foods, view, fragment);
-            lvBakeFoodList.setAdapter(mAdapter);
+            mAdapter = new FoodListAdapter(getContext());
+            lvDrinkFoodList.setAdapter(mAdapter);
 
             progressDialog.dismiss();
         }
@@ -103,7 +185,7 @@ public class HomeBakePageFragment extends Fragment {
         @Override
         protected List<TbFood> doInBackground(String... strings) {
             try {
-                java.net.URL url = new URL(strings[0]);
+                URL url = new URL(strings[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 connection.setRequestMethod("POST");
@@ -112,7 +194,7 @@ public class HomeBakePageFragment extends Fragment {
                 connection.setUseCaches(false);
                 connection.connect();
 
-                String body = "ftId=" + 8;
+                String body = "ftId=" + 10;
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                         connection.getOutputStream(), "UTF-8"));
                 writer.write(body);
@@ -132,10 +214,10 @@ public class HomeBakePageFragment extends Fragment {
                     String jsonCode = new String(outStream.toByteArray());
                     Gson gson = new Gson();
 
-                    FoodsResultType foodResultType = gson.fromJson(jsonCode, FoodsResultType.class);
-                    if (foodResultType.getState() == 1) {   // 找寻到标题信息
+                    FoodsResultType foodsResultType = gson.fromJson(jsonCode, FoodsResultType.class);
+                    if (foodsResultType.getState() == 1) {   // 找寻到标题信息
                         // 将用户实体带到主界面
-                        return foodResultType.getFoods();
+                        return foodsResultType.getFoods();
 
                     } else {    // 没有相关的标题
                         Looper.prepare();

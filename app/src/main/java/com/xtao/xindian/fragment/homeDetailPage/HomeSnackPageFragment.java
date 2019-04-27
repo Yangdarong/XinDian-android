@@ -36,22 +36,23 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
-public class HomeBakePageFragment extends Fragment {
+public class HomeSnackPageFragment extends Fragment {
 
     //    lv_snack_food_list
-    private ListView lvBakeFoodList;
+    private ListView lvSnackFoodList;
     //    数据源
     private List<TbFood> foods;
+    //    适配器
+    private FoodListAdapter mAdapter;
     //    数据网络来源
     private final String URL = HttpURL.IP_ADDRESS + "/food/getFoodsList.json";
 
-    private FoodListAdapter mAdapter;
-
     private ProgressDialog progressDialog;
+
     private View view;
     private Fragment fragment = null;
 
-    public HomeBakePageFragment() {
+    public HomeSnackPageFragment() {
         // Required empty public constructor
     }
 
@@ -59,8 +60,8 @@ public class HomeBakePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_home_bake_page, container, false);
-        lvBakeFoodList = view.findViewById(R.id.lv_bake_food_list);
+        view = inflater.inflate(R.layout.fragment_home_snack_page, container, false);
+        lvSnackFoodList = view.findViewById(R.id.lv_snack_food_list);
         fragment = this;
         initView();
         initData();
@@ -95,7 +96,7 @@ public class HomeBakePageFragment extends Fragment {
             // 装配数据
             foods = tbFoods;
             mAdapter = new FoodListAdapter(getContext(), foods, view, fragment);
-            lvBakeFoodList.setAdapter(mAdapter);
+            lvSnackFoodList.setAdapter(mAdapter);
 
             progressDialog.dismiss();
         }
@@ -112,7 +113,7 @@ public class HomeBakePageFragment extends Fragment {
                 connection.setUseCaches(false);
                 connection.connect();
 
-                String body = "ftId=" + 8;
+                String body = "ftId=" + 7;
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                         connection.getOutputStream(), "UTF-8"));
                 writer.write(body);

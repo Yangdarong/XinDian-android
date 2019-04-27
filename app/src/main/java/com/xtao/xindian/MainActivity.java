@@ -42,8 +42,15 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
         mFragmentManager = getSupportFragmentManager();
-        // 默认首页被选中(将Action先隐藏)
-        switchFragment(mHomeFragment);
+        int id = getIntent().getIntExtra("id", 0);
+        if (id == 3) {
+
+
+        } else {
+            // 默认首页被选中(将Action先隐藏)
+            switchFragment(mHomeFragment);
+        }
+
         // 点击RadioGroup切换页面
         rbTabs.setOnCheckedChangeListener(mOnCheckedChangeListener);
     }

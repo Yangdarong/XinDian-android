@@ -7,7 +7,7 @@
     <!--用户主页下的四个导航栏-->
     <string name="title_home">主页</string>
     <string name="title_star">美味星球</string>
-    <string name="title_food">我的美食</string>
+    <string name="title_food">购物车</string>
     <string name="title_info">我的</string>
 
     <!-- -->

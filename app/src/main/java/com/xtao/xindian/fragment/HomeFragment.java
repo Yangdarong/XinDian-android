@@ -1,5 +1,7 @@
 package com.xtao.xindian.fragment;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -34,7 +36,9 @@ public class HomeFragment extends Fragment {
     private TabLayout mTlHome;
     private ViewPager mVpHome;
 
-    private List<TbTitle> titles;
+    private ProgressDialog progressDialog;
+
+    private String TITLES_URL = "http://172.24.95.94:8080/xindian/title/queryTitles.json";
 
     public HomeFragment() {
         // Required empty public constructor
@@ -63,7 +67,7 @@ public class HomeFragment extends Fragment {
     private void initData() {
         // 1、 获取首页的标题信息
         // 访问 SSM 后台 需要开启子线程
-        new Thread(new Runnable() {
+        /*new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -120,15 +124,96 @@ public class HomeFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        }).start();*/
 
         // 填充标题界面
         /*mVpHome.setAdapter(new HomeTitleAdapter(getChildFragmentManager(), titles));
         mTlHome.setupWithViewPager(mVpHome);*/
+
+        new MyAsyncTask().execute(TITLES_URL);
     }
 
     private void initView() {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("正在加载");
+        progressDialog.setMessage("请稍后...");
+        progressDialog.setCancelable(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);  // 圆形旋转
+    }
 
+    private class MyAsyncTask extends AsyncTask<String, Integer, List<TbTitle>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
+        }
+
+        @Override
+        protected List<TbTitle> doInBackground(String... strings) {
+            try {
+                URL url = new URL(TITLES_URL);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                connection.setRequestMethod("POST");
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setUseCaches(false);
+                connection.connect();
+
+                String body = "tFrom=" + 1;
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                        connection.getOutputStream(), "UTF-8"));
+                writer.write(body);
+                writer.close();
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {    // 200
+                    InputStream inputStream = connection.getInputStream();
+                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                    byte[] data = new byte[1024];
+                    int len = 0;
+                    while ((len = inputStream.read(data)) != -1) {
+                        outStream.write(data, 0, len);
+                    }
+                    inputStream.close();
+
+                    String jsonCode = new String(outStream.toByteArray());
+                    Gson gson = new Gson();
+
+                    TitleResultType titleResultType = gson.fromJson(jsonCode, TitleResultType.class);
+                    if (titleResultType.getState() == 1) {   // 找寻到标题信息
+                        // 将用户实体带到主界面
+                        return titleResultType.getTitles();
+
+                    } else {    // 没有相关的标题
+                        Looper.prepare();
+                        Toast.makeText(getActivity(), "服务器数据丢失，请重试", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                    }
+
+                } else {    // 网络错误
+                    Looper.prepare();
+                    Toast.makeText(getActivity(), "无法连接到服务器,请重试", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<TbTitle> titles) {
+            super.onPostExecute(titles);
+
+            mVpHome.setAdapter(new HomeTitleAdapter(getChildFragmentManager(), titles));
+            mTlHome.setupWithViewPager(mVpHome);
+
+            progressDialog.dismiss();
+        }
     }
 
     final class MorePagerAdapter extends PagerAdapter {
