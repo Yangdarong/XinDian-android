@@ -1,6 +1,7 @@
 package com.xtao.xindian.pojo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -24,11 +25,27 @@ public class TbUser implements Serializable {
 
     private String uHeadPortrait;
 
-    private Date uRegisterTime;
-
-    private Date uLoginTime;
+    private Timestamp uLoginTime;
 
     private int uUserStateId;
+
+    public TbUser(String uLoginId, String uPassword) {
+        this.uLoginId = uLoginId;
+        this.uPassword = uPassword;
+    }
+
+    public TbUser() {
+    }
+
+    public TbUser(int uId, String uSignature, String uSex, String uMail, String uPhone, String uHeadPortrait, int uUserStateId) {
+        this.uId = uId;
+        this.uSignature = uSignature;
+        this.uSex = uSex;
+        this.uMail = uMail;
+        this.uPhone = uPhone;
+        this.uHeadPortrait = uHeadPortrait;
+        this.uUserStateId = uUserStateId;
+    }
 
     public int getuId() {
         return uId;
@@ -94,19 +111,11 @@ public class TbUser implements Serializable {
         this.uHeadPortrait = uHeadPortrait;
     }
 
-    public Date getuRegisterTime() {
-        return uRegisterTime;
-    }
-
-    public void setuRegisterTime(Date uRegisterTime) {
-        this.uRegisterTime = uRegisterTime;
-    }
-
-    public Date getuLoginTime() {
+    public Timestamp getuLoginTime() {
         return uLoginTime;
     }
 
-    public void setuLoginTime(Date uLoginTime) {
+    public void setuLoginTime(Timestamp uLoginTime) {
         this.uLoginTime = uLoginTime;
     }
 

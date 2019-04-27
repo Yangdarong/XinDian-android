@@ -22,6 +22,7 @@ import com.xtao.xindian.fragment.adapter.HomeNavAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HomeChoicePageFragment extends Fragment {
 
@@ -188,7 +189,7 @@ public class HomeChoicePageFragment extends Fragment {
             @Override
             public void run() {
                 while (!isStop) {
-                    getActivity().runOnUiThread(new Runnable() {
+                    (getActivity()).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             vpHomePicNav.setCurrentItem(vpHomePicNav.getCurrentItem() + 1);

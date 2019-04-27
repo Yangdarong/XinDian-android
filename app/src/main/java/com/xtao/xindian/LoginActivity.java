@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.xtao.xindian.common.UserResultType;
+import com.xtao.xindian.utils.UserUtils;
 import com.xtao.xindian.utils.UtilHelpers;
 
 import java.io.BufferedWriter;
@@ -46,6 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         initView();
         initData();
         initListener();
+
+
     }
 
     @Override
@@ -72,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+
                 startActivity(intent);
                 finish();
             }
@@ -132,15 +136,23 @@ public class LoginActivity extends AppCompatActivity {
                                     // 将用户实体带到主界面
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable("userInformation", userResultType.getUser());
+
+                                    // 保存状态信息
+                                    UserUtils.saveLoginInfo(getApplicationContext(), userResultType.getUser());
+
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                     intent.putExtras(bundle);
 
                                     startActivity(intent);
                                     finish();
                                     Looper.loop();
-                                } else {    // 账号密码不正确 或没有该用户
+                                } else if (userResultType.getState() == 0) {    // 账号密码不正确 或没有该用户
                                     Looper.prepare();
                                     Toast.makeText(LoginActivity.this, "请检查账号和密码", Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                } else {
+                                    Looper.prepare();
+                                    Toast.makeText(LoginActivity.this, "您已登录", Toast.LENGTH_SHORT).show();
                                     Looper.loop();
                                 }
 

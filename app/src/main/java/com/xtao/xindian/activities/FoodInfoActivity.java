@@ -20,6 +20,7 @@ import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.fragment.BuycarFragment;
 import com.xtao.xindian.pojo.TbFood;
+import com.xtao.xindian.utils.UserUtils;
 import com.xtao.xindian.view.CircleImageView;
 
 import java.io.BufferedWriter;
@@ -113,10 +114,21 @@ public class FoodInfoActivity extends AppCompatActivity {
         etFoodAddBuycar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("id", 3);
-                startActivity(intent);
-                finish();
+                // 验证登录
+                if (UserUtils.isLogined(getApplicationContext())) {
+                    // 创建新的订单
+                }
+
+
+            }
+        });
+
+        etFoodInfoBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 验证登录
+
+                // 结算
             }
         });
     }

@@ -14,6 +14,8 @@ import com.xtao.xindian.fragment.BuycarFragment;
 import com.xtao.xindian.fragment.HomeFragment;
 import com.xtao.xindian.fragment.InfoFragment;
 import com.xtao.xindian.fragment.StarFragment;
+import com.xtao.xindian.pojo.TbUser;
+import com.xtao.xindian.utils.UserUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,21 +40,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TbUser user = UserUtils.readLoginInfo(this);
+
+
         setContentView(R.layout.activity_main);
 
         initView();
         mFragmentManager = getSupportFragmentManager();
-        int id = getIntent().getIntExtra("id", 0);
-        if (id == 3) {
+        // 自动登录
+        if (user.getuId() != 0)
+            autoLogin(user);
 
-
-        } else {
-            // 默认首页被选中(将Action先隐藏)
-            switchFragment(mHomeFragment);
-        }
+        // 默认首页被选中(将Action先隐藏)
+        //switchFragment(mHomeFragment);
+        addFragment(R.id.home_tab);
+        mFragmentText = createFragment(R.id.home_tab);
 
         // 点击RadioGroup切换页面
         rbTabs.setOnCheckedChangeListener(mOnCheckedChangeListener);
+    }
+
+    private void autoLogin(TbUser user) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("userInformation", user);
+        getIntent().putExtras(bundle);
     }
 
     private int mCheckId;
