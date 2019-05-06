@@ -12,6 +12,7 @@
         android:background="@color/white">
 
         <ImageView
+            android:id="@+id/iv_buycar_select"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:layout_width="0dp"
@@ -20,7 +21,7 @@
             android:src="@drawable/pic_buycar_select"/>
 
         <com.xtao.xindian.view.CircleImageView
-            android:id="@+id/pic_user_icon"
+            android:id="@+id/pic_buycar_mer_icon"
             android:layout_marginStart="2dp"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -28,6 +29,7 @@
             android:src="@drawable/test" />
 
         <TextView
+            android:id="@+id/tv_buycar_mer_name"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:layout_width="0dp"
@@ -38,6 +40,7 @@
             android:textColor="#000"/>
 
         <ImageView
+            android:id="@+id/iv_buycar_extend"
             android:layout_gravity="center"
             android:paddingEnd="5dp"
             android:layout_width="0dp"

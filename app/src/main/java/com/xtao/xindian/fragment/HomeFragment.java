@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.xtao.xindian.R;
 import com.xtao.xindian.common.TitleResultType;
+import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.fragment.adapter.HomeTitleAdapter;
 import com.xtao.xindian.pojo.TbTitle;
 
@@ -38,7 +39,7 @@ public class HomeFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
-    private String TITLES_URL = "http://172.24.95.94:8080/xindian/title/queryTitles.json";
+    private String TITLES_URL = HttpURL.IP_ADDRESS + "/title/queryTitles.json";
 
     public HomeFragment() {
         // Required empty public constructor

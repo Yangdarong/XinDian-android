@@ -15,11 +15,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.xtao.xindian.MainActivity;
 import com.xtao.xindian.R;
+import com.xtao.xindian.common.CommonResultType;
 import com.xtao.xindian.common.FoodResultType;
 import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.fragment.BuycarFragment;
 import com.xtao.xindian.pojo.TbFood;
+import com.xtao.xindian.pojo.TbUser;
 import com.xtao.xindian.utils.UserUtils;
 import com.xtao.xindian.view.CircleImageView;
 
@@ -36,6 +38,7 @@ public class FoodInfoActivity extends AppCompatActivity {
     private TbFood food;
 //    网络数据源
     private final String URL = HttpURL.IP_ADDRESS + "/food/getFood.json";
+    private final String ADD_TO_BAYCAR_URL = HttpURL.IP_ADDRESS + "/order/addBuyCar.json";
     private int fId;
 //    消息窗
     private ProgressDialog progressDialog;
@@ -59,7 +62,7 @@ public class FoodInfoActivity extends AppCompatActivity {
     private EditText etFoodAddBuycar;   // 加入购物车
     private EditText etFoodInfoBuy;     // 购买
 
-
+    private TbUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +111,7 @@ public class FoodInfoActivity extends AppCompatActivity {
 
     private void initData() {
         new FoodAsyncTask().execute(URL);
+        user = UserUtils.readLoginInfo(getApplicationContext());
     }
 
     private void initListener() {
@@ -117,8 +121,11 @@ public class FoodInfoActivity extends AppCompatActivity {
                 // 验证登录
                 if (UserUtils.isLogined(getApplicationContext())) {
                     // 创建新的订单
-                }
+                    new AddFoodToBayCarAsyncTask().execute(ADD_TO_BAYCAR_URL);
 
+                } else {
+                    Toast.makeText(getApplicationContext(), "没有登录,请返回登录", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -131,6 +138,77 @@ public class FoodInfoActivity extends AppCompatActivity {
                 // 结算
             }
         });
+    }
+
+    private class AddFoodToBayCarAsyncTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Toast.makeText(getApplicationContext(), "添加购物车成功", Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                java.net.URL url = new URL(strings[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                connection.setRequestMethod("POST");
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setUseCaches(false);
+                connection.connect();
+
+                String body = "fId=" + fId + "&mId=" + food.getMer().getmId()
+                        + "&uId=" + user.getuId();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                        connection.getOutputStream(), "UTF-8"));
+                writer.write(body);
+                writer.close();
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {    // 200
+                    InputStream inputStream = connection.getInputStream();
+                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                    byte[] data = new byte[1024];
+                    int len = 0;
+                    while ((len = inputStream.read(data)) != -1) {
+                        outStream.write(data, 0, len);
+                    }
+                    inputStream.close();
+
+                    String jsonCode = new String(outStream.toByteArray());
+                    Gson gson = new Gson();
+
+                    CommonResultType resultType = gson.fromJson(jsonCode, CommonResultType.class);
+                    if (resultType.getState() == 1) {   // 找寻到标题信息
+                        // 将用户实体带到主界面
+                        return resultType.getMessage();
+
+                    } else {    // 没有相关的标题
+                        Looper.prepare();
+                        Toast.makeText(getApplicationContext(), "服务器数据丢失，请重试", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                    }
+
+                } else {    // 网络错误
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(), "无法连接到服务器,请重试", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
     private class FoodAsyncTask extends AsyncTask<String, Integer, TbFood> {

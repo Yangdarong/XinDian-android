@@ -40,6 +40,7 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tv_buycar_nonfoods"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -47,6 +48,7 @@
             android:textSize="22sp"/>
 
         <ExpandableListView
+            android:id="@+id/elv_buycar_list"
             android:background="@color/CutOfLine"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -65,6 +67,7 @@
             android:layout_height="match_parent"
             android:layout_weight="6">
             <RadioButton
+                android:id="@+id/rb_buycar_selectall"
                 android:layout_marginStart="10dp"
                 android:layout_gravity="center"
                 android:layout_width="0dp"
@@ -73,6 +76,7 @@
                 android:text="全选"/>
 
             <TextView
+                android:id="@+id/tv_buycar_delete"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -98,6 +102,7 @@
                 android:text="合计:"/>
 
             <TextView
+                android:id="@+id/tv_buycar_money"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
@@ -108,6 +113,7 @@
 
 
             <EditText
+                android:id="@+id/et_buycar_buy"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"

@@ -94,7 +94,7 @@ public class HomeBakePageFragment extends Fragment {
 
             // 装配数据
             foods = tbFoods;
-            mAdapter = new FoodListAdapter(getContext(), foods, view, fragment);
+            mAdapter = new FoodListAdapter(getActivity(), foods, view, fragment);
             lvBakeFoodList.setAdapter(mAdapter);
 
             progressDialog.dismiss();
