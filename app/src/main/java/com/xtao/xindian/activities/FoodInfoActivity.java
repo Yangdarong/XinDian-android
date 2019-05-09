@@ -118,14 +118,8 @@ public class FoodInfoActivity extends AppCompatActivity {
         etFoodAddBuycar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 验证登录
-                if (UserUtils.isLogined(getApplicationContext())) {
-                    // 创建新的订单
-                    new AddFoodToBayCarAsyncTask().execute(ADD_TO_BAYCAR_URL);
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "没有登录,请返回登录", Toast.LENGTH_SHORT).show();
-                }
+                // 创建新的订单
+                new AddFoodToBayCarAsyncTask().execute(ADD_TO_BAYCAR_URL);
 
             }
         });
@@ -133,9 +127,9 @@ public class FoodInfoActivity extends AppCompatActivity {
         etFoodInfoBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 验证登录
-
-                // 结算
+                // 跳转到结算页面
+                Intent intent = new Intent(getApplicationContext(), BuycarSettleActivity.class);
+                startActivity(intent);
             }
         });
     }

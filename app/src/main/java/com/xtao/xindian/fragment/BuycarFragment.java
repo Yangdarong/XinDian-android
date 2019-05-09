@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.RadioButton;
@@ -22,6 +24,8 @@ import com.google.gson.Gson;
 import com.xtao.xindian.R;
 import com.xtao.xindian.common.OrderFoodsResultType;
 import com.xtao.xindian.common.task.BitmapTask;
+import com.xtao.xindian.common.task.FoodNcvAddTask;
+import com.xtao.xindian.common.task.FoodNcvSubTask;
 import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.pojo.TbFood;
 import com.xtao.xindian.pojo.TbMer;
@@ -31,6 +35,7 @@ import com.xtao.xindian.pojo.TbUser;
 import com.xtao.xindian.utils.UserUtils;
 import com.xtao.xindian.utils.ValueUtils;
 import com.xtao.xindian.view.CircleImageView;
+import com.xtao.xindian.view.NumberControllerView;
 import com.xtao.xindian.view.RoundRectImageView;
 
 import java.io.BufferedWriter;
@@ -61,8 +66,8 @@ public class BuycarFragment extends Fragment {
     private List<TbOrder> orders;
     private List<TbOrderFood> orderFoods;
 
-    private List<TbMer> groupList;
-    private List<List<TbFood>> childList;
+    private List<TbMer> groupList = new ArrayList<>();
+    private List<List<TbOrderFood>> childList = new ArrayList<>();
 
     private ProgressDialog progressDialog;
 
@@ -79,6 +84,8 @@ public class BuycarFragment extends Fragment {
     private TextView tvBuyCarFoodName;
     private TextView tvBuyCarFoodDprice;
 
+    private float cost;     // 计算总金额
+    private NumberControllerView nvcBuyCarFoodItem;
 
     public BuycarFragment() {
         // 当类被构造的时候,
@@ -96,10 +103,12 @@ public class BuycarFragment extends Fragment {
         // 获取到用户信息
         if (bundle != null) {
             user = (TbUser) bundle.get("userInformation");
+        } else {
+            user = UserUtils.readLoginInfo(getActivity());
         }
 
         initView(view);
-        initData();
+        //initData();
         return view;
     }
 
@@ -115,7 +124,6 @@ public class BuycarFragment extends Fragment {
         tvBuyCarMoney = view.findViewById(R.id.tv_buycar_money);
         etBuyCarBuy = view.findViewById(R.id.et_buycar_buy);
 
-
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle("正在加载");
         progressDialog.setMessage("请稍后...");
@@ -124,14 +132,28 @@ public class BuycarFragment extends Fragment {
     }
 
     private void initData() {
-        new BuyCarAsyncTask().execute(QUERY_BUY_CAR);
+        cost = 0;
+        groupList = new ArrayList<>();
+        groupList.clear();
+        childList = new ArrayList<>();
+        childList.clear();
+
+        orders = new ArrayList<>();
+        orders.clear();
+        orderFoods = new ArrayList<>();
+        orderFoods.clear();
+        if (user.getuId() != 0)
+            new BuyCarAsyncTask().execute(QUERY_BUY_CAR);
+        else {
+
+        }
     }
 
     @Override
     public void onResume() {
-
         super.onResume();
-        //Toast.makeText(getActivity(), "我回来了", Toast.LENGTH_SHORT).show();
+        // 重新刷新购物车界面
+        initData();
     }
 
     private class BuyCarListAdapter extends BaseExpandableListAdapter {
@@ -194,21 +216,37 @@ public class BuycarFragment extends Fragment {
         }
 
         @Override
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             View view = View.inflate(getContext(), R.layout.layout_food_mer, null);
             picBuyCarFoodUrl = view.findViewById(R.id.pic_buycar_food_url);
-            String foodIconUrl = childList.get(groupPosition).get(childPosition).getfUrl();
+            String foodIconUrl = childList.get(groupPosition).get(childPosition).getFood().getfUrl();
             if (ValueUtils.isNull(foodIconUrl)) {
                 new BitmapTask().execute(picBuyCarFoodUrl, HttpURL.MER_DEFAULT_PIC);
             } else {
                 new BitmapTask().execute(picBuyCarFoodUrl, foodIconUrl);
             }
-
+            Log.i("number", "groupPosition: " + groupPosition + " childPosition: " + childPosition);
             tvBuyCarFoodName = view.findViewById(R.id.tv_buycar_food_name);
-            tvBuyCarFoodName.setText(childList.get(groupPosition).get(childPosition).getfName());
+            tvBuyCarFoodName.setText(childList.get(groupPosition).get(childPosition).getFood().getfName());
 
             tvBuyCarFoodDprice = view.findViewById(R.id.tv_buycar_food_dprice);
-            tvBuyCarFoodDprice.setText("￥" + childList.get(groupPosition).get(childPosition).getfDPrice());
+            tvBuyCarFoodDprice.setText("￥" + childList.get(groupPosition).get(childPosition).getFood().getfDPrice());
+            nvcBuyCarFoodItem = view.findViewById(R.id.ncv_buycar_food_item);
+            nvcBuyCarFoodItem.setValue(childList.get(groupPosition).get(childPosition).getOfAmount());
+            nvcBuyCarFoodItem.setValueChangeListener(new NumberControllerView.onNumChangedListener() {
+
+                @Override
+                public void addValueListener(View v, int value) {
+                    new FoodNcvAddTask().execute(childList.get(groupPosition).get(childPosition));
+                    initData();
+                }
+
+                @Override
+                public void subValueListener(View v, int value) {
+                    new FoodNcvSubTask().execute(childList.get(groupPosition).get(childPosition));
+                    initData();
+                }
+            });
 
             return view;
         }
@@ -225,10 +263,25 @@ public class BuycarFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (orderFoods.size() != 0) {
-                tvBuyCarNonFoods.measure(0, 0);
-                //Toast.makeText(getActivity(), "执行了111", Toast.LENGTH_SHORT).show();
+
                 elvBuyCarList.setAdapter(new BuyCarListAdapter());
+                // 自动展开
+                for (int i = 0; i < groupList.size(); i++) {
+                    elvBuyCarList.expandGroup(i);
+                }
+                elvBuyCarList.setGroupIndicator(null);
+
+                // 更新金额
+                tvBuyCarMoney.setText("￥" + String.format("%.2f", cost));
+
+            } else {
+
             }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
         }
 
         @Override
@@ -242,7 +295,6 @@ public class BuycarFragment extends Fragment {
                 connection.setDoOutput(true);
                 connection.setUseCaches(false);
                 connection.connect();
-
                 String body = "uId=" + user.getuId();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                         connection.getOutputStream(), "UTF-8"));
@@ -270,10 +322,13 @@ public class BuycarFragment extends Fragment {
                         orderFoods = resultType.getOrderFoods();
 
                         for (int i = 0; i < orders.size(); i++) {
-                            List<TbFood> foods = new ArrayList<>();
+                            List<TbOrderFood> foods = new ArrayList<>();
                             for (int j = 0; j < orderFoods.size(); j++) {
-                                 if (orders.get(i).getoId() == orderFoods.get(j).getOrder().getoId())
-                                     foods.add(orderFoods.get(j).getFood());
+                                // 更新总金额
+                                 if (orders.get(i).getoId() == orderFoods.get(j).getOrder().getoId()) {
+                                     foods.add(orderFoods.get(j));
+                                     cost += orderFoods.get(j).getOfAmount() * orderFoods.get(j).getFood().getfDPrice();
+                                 }
                             }
                             addData(orders.get(i).getMer(), foods);
                         }
@@ -299,7 +354,7 @@ public class BuycarFragment extends Fragment {
         }
     }
 
-    private void addData(TbMer mer, List<TbFood> foods) {
+    private void addData(TbMer mer, List<TbOrderFood> foods) {
         groupList.add(mer);
         childList.add(foods);
     }

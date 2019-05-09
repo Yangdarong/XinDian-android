@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.xtao.xindian.common.UserResultType;
 import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.utils.UserUtils;
@@ -126,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                                 //Log.d("tag", new String(outStream.toByteArray()));
 
                                 String jsonCode = new String(outStream.toByteArray());
-                                Gson gson = new Gson();
+                                Gson gson = new GsonBuilder().setDateFormat("yyy-MM-dd HH:mm:ss").create();
 
                                 UserResultType userResultType = gson.fromJson(jsonCode, UserResultType.class);
                                 if (userResultType.getState() == 1) {   // 登录成功

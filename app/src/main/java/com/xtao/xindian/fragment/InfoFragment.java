@@ -19,6 +19,7 @@ import com.xtao.xindian.activities.UserInfoActivity;
 import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.pojo.TbUser;
+import com.xtao.xindian.utils.UserUtils;
 import com.xtao.xindian.view.CircleImageView;
 
 import java.util.Objects;
@@ -47,6 +48,8 @@ public class InfoFragment extends Fragment {
         // 获取到用户信息
         if (bundle != null) {
             user = (TbUser) bundle.get("userInformation");
+        } else {
+            user = UserUtils.readLoginInfo(getActivity());
         }
 
         initView(mView);
@@ -82,6 +85,7 @@ public class InfoFragment extends Fragment {
     private void initData() {
         if (user != null) {
             tvUserName.setText(getResources().getString(R.string.welcome_user, user.getuSignature()));
+
         }
 
         new BitmapTask().execute(picUserIcon, user.getuHeadPortrait());
@@ -102,27 +106,4 @@ public class InfoFragment extends Fragment {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);  // 圆形旋转
     }
 
-    /*private class UploadHeadportraitTask extends AsyncTask<String, Void, Bitmap> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            // 装配数据
-            picUserIcon.setImageBitmap(bitmap);
-
-            progressDialog.dismiss();
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            String url = strings[0];
-            return HttpURL.getHttpBitmap(url);
-        }
-    }*/
 }

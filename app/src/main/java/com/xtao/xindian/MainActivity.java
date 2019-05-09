@@ -60,6 +60,14 @@ public class MainActivity extends AppCompatActivity {
         rbTabs.setOnCheckedChangeListener(mOnCheckedChangeListener);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TbUser user = UserUtils.readLoginInfo(this);
+        if (user.getuId() != 0)
+            autoLogin(user);
+    }
+
     private void autoLogin(TbUser user) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("userInformation", user);
@@ -72,20 +80,6 @@ public class MainActivity extends AppCompatActivity {
     RadioGroup.OnCheckedChangeListener mOnCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-            /*switch (checkedId) {
-                case R.id.home_tab:
-                    //switchFragment(mHomeFragment);
-                    break;
-                case R.id.star_tab:
-                    //switchFragment(mStarFragment);
-                    break;
-                case R.id.food_tab:
-                    //switchFragment(mFoodFragment);
-                    break;
-                case R.id.info_tab:
-                    //switchFragment(mInfoFragment);
-                    break;
-            }*/
 
             mCheckId = checkedId;
             addFragment(mCheckId);

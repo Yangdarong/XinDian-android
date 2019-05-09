@@ -25,7 +25,7 @@ public class TbUser implements Serializable {
 
     private String uHeadPortrait;
 
-    private Timestamp uLoginTime;
+    private Date uLoginTime;
 
     private int uUserStateId;
 
@@ -111,11 +111,11 @@ public class TbUser implements Serializable {
         this.uHeadPortrait = uHeadPortrait;
     }
 
-    public Timestamp getuLoginTime() {
+    public Date getuLoginTime() {
         return uLoginTime;
     }
 
-    public void setuLoginTime(Timestamp uLoginTime) {
+    public void setuLoginTime(Date uLoginTime) {
         this.uLoginTime = uLoginTime;
     }
 

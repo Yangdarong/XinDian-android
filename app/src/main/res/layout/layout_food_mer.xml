@@ -3,30 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/fontGray">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/iv_buycar_select_item"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/pic_buycar_select"/>
 
         <android.support.v7.widget.CardView
             android:layout_width="0dp"
             android:layout_weight="13"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginEnd="2dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginEnd="1dp"
             app:cardCornerRadius="5dp"
             app:cardElevation="5dp">
 
@@ -87,6 +78,7 @@
                     </LinearLayout>
 
                     <com.xtao.xindian.view.NumberControllerView
+                        android:id="@+id/ncv_buycar_food_item"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:value="1"

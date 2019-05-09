@@ -62,7 +62,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     recLen--;
                     // 设置倒数计时的时间
-                    btnSellerLogin.setText("商家入口 " + recLen);
+                    btnSellerLogin.setText("跳过 " + recLen);
                     if (recLen < 0) {
                         timer.cancel();
                         btnSellerLogin.setVisibility(View.GONE);

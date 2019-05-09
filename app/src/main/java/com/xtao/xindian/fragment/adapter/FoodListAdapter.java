@@ -11,11 +11,13 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.xtao.xindian.LoginActivity;
 import com.xtao.xindian.R;
 import com.xtao.xindian.activities.FoodInfoActivity;
 import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.pojo.TbFood;
+import com.xtao.xindian.utils.UserUtils;
 import com.xtao.xindian.view.CircleImageView;
 import com.xtao.xindian.view.RoundRectImageView;
 
@@ -96,13 +98,18 @@ public class FoodListAdapter extends BaseAdapter {
                 int fId = ((TbFood) getItem(position)).getfId();
                 Bundle bundle = new Bundle();
                 bundle.putInt("fId", fId);
-                Intent intent = new Intent(view.getContext().getApplicationContext(), FoodInfoActivity.class);
-                intent.putExtras(bundle);
+
                 // 页面跳转
-                view.getContext().startActivity(intent);
-                //Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
-                Objects.requireNonNull(fragement.getActivity()).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                //Toast.makeText(v.getContext(), "你拿到的菜品ID是:" + ((TbFood) getItem(position)).getfId(), Toast.LENGTH_SHORT).show();
+                if (UserUtils.isLogined(view.getContext())) {
+                    Intent intent = new Intent(view.getContext().getApplicationContext(), FoodInfoActivity.class);
+                    intent.putExtras(bundle);
+                    view.getContext().startActivity(intent);
+                    Objects.requireNonNull(fragement.getActivity()).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                } else {    // 没有登录
+                    Intent intent = new Intent(view.getContext().getApplicationContext(), LoginActivity.class);
+                    view.getContext().startActivity(intent);
+                }
+
             }
         };
         etFoodBuy.setOnClickListener(doGetFoodInfoListener);

@@ -28,7 +28,7 @@ public class UserUtils {
 
         return new TbUser(
                 sharedPreferences.getInt("uId", 0),
-                sharedPreferences.getString("uSignature", "默认用户名"),
+                sharedPreferences.getString("uSignature", "请登录"),
                 sharedPreferences.getString("uSex", "未设置"),
                 sharedPreferences.getString("uMail", "未设置"),
                 sharedPreferences.getString("uPhone", "未设置"),

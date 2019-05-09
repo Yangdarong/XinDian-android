@@ -20,7 +20,7 @@
             android:id="@+id/et_user_loginId"
             android:layout_gravity="center"
             android:layout_marginTop="35dp"
-            android:layout_width="380dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:hint="请输入用户名" />
 
@@ -28,7 +28,7 @@
             android:id="@+id/et_user_password"
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
-            android:layout_width="380dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:inputType="textPassword"
             android:hint="请输入密码" />
