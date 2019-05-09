@@ -129,6 +129,15 @@ public class FoodInfoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 跳转到结算页面
                 Intent intent = new Intent(getApplicationContext(), BuycarSettleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("fId", fId);
+                bundle.putInt("uId", user.getuId());
+                bundle.putInt("mId", food.getMer().getmId());
+                bundle.putString("fName", food.getfName());
+                bundle.putFloat("fDPrice", food.getfDPrice());
+                bundle.putString("fUrl", food.getfUrl());
+
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

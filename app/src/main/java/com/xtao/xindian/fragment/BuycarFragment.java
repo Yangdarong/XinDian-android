@@ -16,6 +16,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import com.google.gson.Gson;
 import com.xtao.xindian.R;
 import com.xtao.xindian.common.OrderFoodsResultType;
 import com.xtao.xindian.common.task.BitmapTask;
+import com.xtao.xindian.common.task.BuycarCostUpdateTask;
 import com.xtao.xindian.common.task.FoodNcvAddTask;
 import com.xtao.xindian.common.task.FoodNcvSubTask;
 import com.xtao.xindian.common.value.HttpURL;
@@ -62,6 +64,8 @@ public class BuycarFragment extends Fragment {
     private TextView tvBuyCarDelete;
     private TextView tvBuyCarMoney;
     private EditText etBuyCarBuy;
+
+    private LinearLayout myLayout;
 
     private List<TbOrder> orders;
     private List<TbOrderFood> orderFoods;
@@ -123,6 +127,8 @@ public class BuycarFragment extends Fragment {
         tvBuyCarDelete = view.findViewById(R.id.tv_buycar_delete);
         tvBuyCarMoney = view.findViewById(R.id.tv_buycar_money);
         etBuyCarBuy = view.findViewById(R.id.et_buycar_buy);
+
+        myLayout = view.findViewById(R.id.my_layout);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle("正在加载");
@@ -225,7 +231,6 @@ public class BuycarFragment extends Fragment {
             } else {
                 new BitmapTask().execute(picBuyCarFoodUrl, foodIconUrl);
             }
-            Log.i("number", "groupPosition: " + groupPosition + " childPosition: " + childPosition);
             tvBuyCarFoodName = view.findViewById(R.id.tv_buycar_food_name);
             tvBuyCarFoodName.setText(childList.get(groupPosition).get(childPosition).getFood().getfName());
 
@@ -238,13 +243,15 @@ public class BuycarFragment extends Fragment {
                 @Override
                 public void addValueListener(View v, int value) {
                     new FoodNcvAddTask().execute(childList.get(groupPosition).get(childPosition));
-                    initData();
+                    // 更新价格
+                    new BuycarCostUpdateTask().execute(tvBuyCarMoney, user.getuId());
                 }
 
                 @Override
                 public void subValueListener(View v, int value) {
                     new FoodNcvSubTask().execute(childList.get(groupPosition).get(childPosition));
-                    initData();
+                    // 更新价格
+                    new BuycarCostUpdateTask().execute(tvBuyCarMoney, user.getuId());
                 }
             });
 
@@ -263,6 +270,8 @@ public class BuycarFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (orderFoods.size() != 0) {
+                // 消除控件
+                myLayout.removeView(tvBuyCarNonFoods);
 
                 elvBuyCarList.setAdapter(new BuyCarListAdapter());
                 // 自动展开
@@ -272,7 +281,7 @@ public class BuycarFragment extends Fragment {
                 elvBuyCarList.setGroupIndicator(null);
 
                 // 更新金额
-                tvBuyCarMoney.setText("￥" + String.format("%.2f", cost));
+                tvBuyCarMoney.setText("￥".concat(String.format("%.2f", cost)));
 
             } else {
 
