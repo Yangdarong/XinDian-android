@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="4dp"
-                    android:text="未设置"
+                    android:text="男"
                     android:textColor="@color/fontGray"
                     android:textSize="16sp" />
 
@@ -127,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="4dp"
-                    android:text="未设置"
+                    android:text="18900000000"
                     android:textColor="@color/fontGray"
                     android:textSize="16sp" />
 
@@ -171,7 +171,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="4dp"
-                    android:text="未设置"
+                    android:text="yxr888@xxx.com"
                     android:textColor="@color/fontGray"
                     android:textSize="16sp" />
 

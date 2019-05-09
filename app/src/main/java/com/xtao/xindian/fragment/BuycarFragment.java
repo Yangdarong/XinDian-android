@@ -226,7 +226,7 @@ public class BuycarFragment extends Fragment {
             super.onPostExecute(s);
             if (orderFoods.size() != 0) {
                 tvBuyCarNonFoods.measure(0, 0);
-                Toast.makeText(getActivity(), "执行了111", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "执行了111", Toast.LENGTH_SHORT).show();
                 elvBuyCarList.setAdapter(new BuyCarListAdapter());
             }
         }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.xtao.xindian.common.UserResultType;
+import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.utils.UserUtils;
 import com.xtao.xindian.utils.UtilHelpers;
 
@@ -97,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            URL url = new URL("http://172.24.95.94:8080/xindian/user/queryUser.json");
+                            URL url = new URL(HttpURL.IP_ADDRESS + "/user/queryUser.json");
                             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                             connection.setRequestMethod("POST");

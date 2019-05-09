@@ -82,7 +82,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()) {
             case R.id.btn_seller_login :
                 // 跳转到商家
-                Toast.makeText(getApplicationContext(), "进入商家版", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "点击跳过", Toast.LENGTH_SHORT).show();
                 finish();
                 if (runnable != null) {
                     handler.removeCallbacks(runnable);
