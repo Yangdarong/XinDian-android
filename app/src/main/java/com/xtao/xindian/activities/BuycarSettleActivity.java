@@ -2,6 +2,7 @@ package com.xtao.xindian.activities;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +13,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.xtao.xindian.R;
+import com.xtao.xindian.common.CommonResultType;
 import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.pojo.TbFood;
@@ -20,6 +23,12 @@ import com.xtao.xindian.pojo.TbOrderFood;
 import com.xtao.xindian.utils.ValueUtils;
 import com.xtao.xindian.view.RoundRectImageView;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +108,7 @@ public class BuycarSettleActivity extends AppCompatActivity {
             orderFoods = new ArrayList<>();
             orderFoods.add(orderFood);
 
-            lvSettleFoodList.setAdapter(mAdapter);
+            new QuickSettleListTask().execute(QUICK_SETTLE);
 
         }
 
@@ -162,5 +171,67 @@ public class BuycarSettleActivity extends AppCompatActivity {
         }
     }
 
+    private class QuickSettleListTask extends AsyncTask<String, Integer, String> {
 
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            lvSettleFoodList.setAdapter(mAdapter);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                URL url = new URL(strings[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                connection.setRequestMethod("POST");
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setUseCaches(false);
+                connection.connect();
+
+                String body = "fId=" + fId + "&mId=" + mId + "&uId=" + uId ;
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                        connection.getOutputStream(), "UTF-8"));
+                writer.write(body);
+                writer.close();
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {    // 200
+                    InputStream inputStream = connection.getInputStream();
+                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                    byte[] data = new byte[1024];
+                    int len = 0;
+                    while ((len = inputStream.read(data)) != -1) {
+                        outStream.write(data, 0, len);
+                    }
+                    inputStream.close();
+
+                    String jsonCode = new String(outStream.toByteArray());
+                    Gson gson = new Gson();
+
+                    CommonResultType resultType = gson.fromJson(jsonCode, CommonResultType.class);
+                    if (resultType.getState() == 1) {   // 找寻到标题信息
+                        // 将用户实体带到主界面
+                        return resultType.getMessage();
+
+                    } else {    // 没有相关的标题
+                        Looper.prepare();
+                        Toast.makeText(getApplicationContext(), "服务器数据丢失，请重试", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                    }
+
+                } else {    // 网络错误
+                    responseCode = connection.getResponseCode();
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(), "无法连接到服务器,请重试", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 }
