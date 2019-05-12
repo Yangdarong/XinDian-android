@@ -48,7 +48,13 @@
             android:theme="@style/AppTheme.NoActionBarWithBackGround" />
         <activity
             android:name=".activities.MerInfoActivity"
-            android:theme="@style/AppTheme.NoActionBarWithBackGround"></activity>
+            android:theme="@style/AppTheme.NoActionBarWithBackGround" />
+        <activity
+            android:name=".activities.PaySuccessfulActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround" />
+        <activity
+            android:name=".activities.OrderConfirmActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround" />
     </application>
 
 </manifest>

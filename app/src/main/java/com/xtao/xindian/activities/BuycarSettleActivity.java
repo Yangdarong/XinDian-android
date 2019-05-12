@@ -1,5 +1,6 @@
 package com.xtao.xindian.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Looper;
@@ -16,12 +17,14 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.xtao.xindian.R;
 import com.xtao.xindian.common.CommonResultType;
-import com.xtao.xindian.common.task.BitmapTask;
+import com.xtao.xindian.common.OrderFoodsResultType;
 import com.xtao.xindian.common.value.HttpURL;
+import com.xtao.xindian.dialog.CommonDialog;
 import com.xtao.xindian.pojo.TbFood;
+import com.xtao.xindian.pojo.TbMer;
+import com.xtao.xindian.pojo.TbOrder;
 import com.xtao.xindian.pojo.TbOrderFood;
 import com.xtao.xindian.utils.ValueUtils;
-import com.xtao.xindian.view.RoundRectImageView;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -47,18 +50,25 @@ public class BuycarSettleActivity extends AppCompatActivity {
     private ListView lvSettleFoodList;
 
     // List的子项目
-    private RoundRectImageView picSettleFoodUrl;
+    private TextView tvSettleFoodNo;
     private TextView tvSettleFoodName;
     private TextView tvSettleAmount;
 
     // 数据源
     private List<TbOrderFood> orderFoods;
+    private List<TbOrder> orders;
 
-    private int fId, uId, mId;
+    private int fId, uId, mId, ofAmount;
     private String fName, fUrl;
     private float fDPrice;
 
-    private final String QUICK_SETTLE = HttpURL.IP_ADDRESS + "/order/addSettle.json";
+    // 查询购物车
+    private final String QUERY_BUY_CAR = HttpURL.IP_ADDRESS + "/order/queryBayCar.json";
+    // 结账
+    private final String QUICK_SETTLE = HttpURL.IP_ADDRESS + "/order/doSettle.json";
+    // json 字符串
+    private String json;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +96,11 @@ public class BuycarSettleActivity extends AppCompatActivity {
         tvTitleName.setText("结算");
         ivTitlePic.setVisibility(View.INVISIBLE);
 
-        if (hasFoodId()) {
-            Toast.makeText(this, "是空的,结算当前所有订单", Toast.LENGTH_SHORT).show();
+        if (!hasFoodId()) {
+            uId = bundle.getInt("uId");
+            //Toast.makeText(this, "uId=" + uId, Toast.LENGTH_SHORT).show();
+            // 首先获取购物车中的OrderFoods
+            new BuyCarAsyncTask().execute(QUERY_BUY_CAR);
         } else {
             //Toast.makeText(this, "不是空的，对该项商品快速结账", Toast.LENGTH_SHORT).show();
             fId = bundle.getInt("fId");
@@ -96,23 +109,42 @@ public class BuycarSettleActivity extends AppCompatActivity {
             fName = bundle.getString("fName");
             fUrl = bundle.getString("fUrl");
             fDPrice = bundle.getFloat("fDPrice");
+            ofAmount = bundle.getInt("ofAmount");
 
             TbFood food = new TbFood();
             food.setfId(fId);
             food.setfName(fName);
             food.setfUrl(fUrl);
             food.setfDPrice(fDPrice);
+
+            food.setmId(mId);
             TbOrderFood orderFood = new TbOrderFood();
+            TbOrder order = new TbOrder();
+            order.setuId(uId);
+
+            orderFood.setOrder(order);
             orderFood.setFood(food);
-            orderFood.setOfAmount(1);
+            orderFood.setOfAmount(ofAmount);
             orderFoods = new ArrayList<>();
             orderFoods.add(orderFood);
 
-            new QuickSettleListTask().execute(QUICK_SETTLE);
-
+            /*new QuickSettleListTask().execute(QUICK_SETTLE);*/
+            lvSettleFoodList.setAdapter(mAdapter);
+            updateTotal();
         }
 
+        // 更新总金额
+        //updateTotal();
 
+    }
+
+    private void updateTotal() {
+        float cost = 0;
+        for (TbOrderFood orderFood : orderFoods) {
+            cost += orderFood.getOfAmount() * orderFood.getFood().getfDPrice();
+        }
+
+        tvSettleFoodCost.setText("￥" + String.format("%.2f", cost));
     }
 
     /**
@@ -124,11 +156,50 @@ public class BuycarSettleActivity extends AppCompatActivity {
         intent = getIntent();
         bundle = intent.getExtras();
 
-        return ValueUtils.isNull(bundle);
+        if (bundle != null) {
+            return bundle.containsKey("fId");
+        }
+        return false;
     }
 
     private void initListener() {
+        // 返回确认
+        tvSettleFoodBk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
+        // 完成支付
+        tvSettleFoodPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 弹出一个消息提示框
+                new CommonDialog(BuycarSettleActivity.this, R.style.DialogTheme, "是否提交订单?", new CommonDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if (confirm) {
+                            // 判断是否存在order
+                            OrderFoodsResultType resultType = new OrderFoodsResultType();
+                            if (ValueUtils.isNull(orders) || orders.size() == 0) {  // 临时购物车结算
+                                resultType.setOrders(null);
+                            } else {    // 购物车结算
+                                resultType.setOrders(orders);
+                            }
+                            resultType.setState(1);
+                            resultType.setOrderFoods(orderFoods);
+                            resultType.setMessage("传输成功");
+
+                            Gson gson = new Gson();
+                            json = gson.toJson(resultType);
+                            new SettleAsyncTask().execute(QUICK_SETTLE, json);
+                            dialog.dismiss();
+                        }
+                    }
+                }).setTitle("交易提示").show();
+            }
+        });
     }
 
 
@@ -153,30 +224,51 @@ public class BuycarSettleActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = View.inflate(getApplicationContext(), R.layout.layout_food_settle, null);
-            picSettleFoodUrl = convertView.findViewById(R.id.pic_buycar_food_url);
-            String picUrl = orderFoods.get(position).getFood().getfUrl();
-            if (ValueUtils.isNull(picUrl)) {
-                new BitmapTask().execute(
-                        picSettleFoodUrl, HttpURL.FOOD_DEFAULT_PIC);
-            } else {
-                new BitmapTask().execute(
-                        picSettleFoodUrl, orderFoods.get(position).getFood().getfUrl());
-            }
+            tvSettleFoodNo = convertView.findViewById(R.id.tv_settle_food_no);
+            tvSettleFoodNo.setText("" + (position + 1));
             tvSettleFoodName = convertView.findViewById(R.id.tv_settle_food_name);
             tvSettleFoodName.setText(orderFoods.get(position).getFood().getfName());
             tvSettleAmount = convertView.findViewById(R.id.tv_settle_food_amount);
-            tvSettleAmount.setText("x"+ orderFoods.get(position).getOfAmount());
+            tvSettleAmount.setText("￥" + orderFoods.get(position).getFood().getfDPrice() + "x"+ orderFoods.get(position).getOfAmount());
+
 
             return convertView;
         }
     }
 
-    private class QuickSettleListTask extends AsyncTask<String, Integer, String> {
+    private class SettleAsyncTask extends AsyncTask<String, Integer, String> {
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            lvSettleFoodList.setAdapter(mAdapter);
+            // 页面跳转到订单确认页
+            Intent intent = new Intent(BuycarSettleActivity.this, OrderConfirmActivity.class);
+            startActivity(intent);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            return HttpURL.getCommonResultType(strings[0], strings[1], BuycarSettleActivity.this);
+        }
+    }
+
+    private class BuyCarAsyncTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (orderFoods.size() != 0) {
+                // 消除控件
+                lvSettleFoodList.setAdapter(mAdapter);
+                updateTotal();
+
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
         }
 
         @Override
@@ -190,8 +282,7 @@ public class BuycarSettleActivity extends AppCompatActivity {
                 connection.setDoOutput(true);
                 connection.setUseCaches(false);
                 connection.connect();
-
-                String body = "fId=" + fId + "&mId=" + mId + "&uId=" + uId ;
+                String body = "uId=" + uId;
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                         connection.getOutputStream(), "UTF-8"));
                 writer.write(body);
@@ -211,27 +302,32 @@ public class BuycarSettleActivity extends AppCompatActivity {
                     String jsonCode = new String(outStream.toByteArray());
                     Gson gson = new Gson();
 
-                    CommonResultType resultType = gson.fromJson(jsonCode, CommonResultType.class);
+                    OrderFoodsResultType resultType = gson.fromJson(jsonCode, OrderFoodsResultType.class);
                     if (resultType.getState() == 1) {   // 找寻到标题信息
                         // 将用户实体带到主界面
+                        orders = resultType.getOrders();
+                        orderFoods = resultType.getOrderFoods();
+
+
                         return resultType.getMessage();
 
                     } else {    // 没有相关的标题
                         Looper.prepare();
-                        Toast.makeText(getApplicationContext(), "服务器数据丢失，请重试", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BuycarSettleActivity.this, "服务器数据丢失，请重试", Toast.LENGTH_SHORT).show();
                         Looper.loop();
                     }
 
                 } else {    // 网络错误
-                    responseCode = connection.getResponseCode();
                     Looper.prepare();
-                    Toast.makeText(getApplicationContext(), "无法连接到服务器,请重试", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BuycarSettleActivity.this, "无法连接到服务器,请重试", Toast.LENGTH_SHORT).show();
                     Looper.loop();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             return null;
         }
     }
+
 }

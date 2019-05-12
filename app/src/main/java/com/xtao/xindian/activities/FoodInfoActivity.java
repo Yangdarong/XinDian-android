@@ -1,5 +1,6 @@
 package com.xtao.xindian.activities;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -13,13 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.xtao.xindian.MainActivity;
 import com.xtao.xindian.R;
 import com.xtao.xindian.common.CommonResultType;
 import com.xtao.xindian.common.FoodResultType;
 import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.value.HttpURL;
-import com.xtao.xindian.fragment.BuycarFragment;
+import com.xtao.xindian.dialog.SettleFoodDialog;
 import com.xtao.xindian.pojo.TbFood;
 import com.xtao.xindian.pojo.TbUser;
 import com.xtao.xindian.utils.UserUtils;
@@ -74,11 +74,12 @@ public class FoodInfoActivity extends AppCompatActivity {
             fId = bundle.getInt("fId");
         }
 
-
         initView();
         initData();
         initListener();
     }
+
+    private SettleFoodDialog dialog;
 
     private void initView() {
         ivFoodInfoBk = findViewById(R.id.iv_food_info_bk);
@@ -100,21 +101,35 @@ public class FoodInfoActivity extends AppCompatActivity {
         etFoodAddBuycar = findViewById(R.id.et_food_add_buycar);
         etFoodInfoBuy = findViewById(R.id.et_food_info_buy);
 
-
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("正在加载");
         progressDialog.setMessage("请稍后...");
         progressDialog.setCancelable(true);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
     }
 
     private void initData() {
         new FoodAsyncTask().execute(URL);
         user = UserUtils.readLoginInfo(getApplicationContext());
+
+        View view = getLayoutInflater().inflate(R.layout.layout_dialog_settle_food, null);
+
+        dialog = new SettleFoodDialog(FoodInfoActivity.this, view, new SettleFoodDialog.OnCloseListener() {
+            @Override
+            public void onClick(Dialog dialog, boolean confirm, int value) {
+                if (confirm) {
+                    doStartFoodSettleAction(value);
+                    dialog.dismiss();
+                }
+            }
+        });
+        dialog.setCancelable(true);
     }
 
     private void initListener() {
+
+
         etFoodAddBuycar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,20 +142,26 @@ public class FoodInfoActivity extends AppCompatActivity {
         etFoodInfoBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 跳转到结算页面
-                Intent intent = new Intent(getApplicationContext(), BuycarSettleActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("fId", fId);
-                bundle.putInt("uId", user.getuId());
-                bundle.putInt("mId", food.getMer().getmId());
-                bundle.putString("fName", food.getfName());
-                bundle.putFloat("fDPrice", food.getfDPrice());
-                bundle.putString("fUrl", food.getfUrl());
-
-                intent.putExtras(bundle);
-                startActivity(intent);
+                // 跳转弹出菜品编辑框
+                dialog.show();
+                //doStartFoodSettleAction();
             }
         });
+    }
+
+    private void doStartFoodSettleAction(int ofAmount) {
+        Intent intent = new Intent(getApplicationContext(), BuycarSettleActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("fId", fId);
+        bundle.putInt("uId", user.getuId());
+        bundle.putInt("mId", food.getMer().getmId());
+        bundle.putString("fName", food.getfName());
+        bundle.putFloat("fDPrice", food.getfDPrice());
+        bundle.putString("fUrl", food.getfUrl());
+        bundle.putInt("ofAmount", ofAmount);
+
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private class AddFoodToBayCarAsyncTask extends AsyncTask<String, Integer, String> {
@@ -313,5 +334,17 @@ public class FoodInfoActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+    }
+
+    @Override
+    protected void onDestroy() {
+        dialog.dismiss();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        dialog.dismiss();
+        super.onResume();
     }
 }

@@ -49,4 +49,42 @@
         <attr name="addButtonBackground" format="reference"/>
         <attr name="numTextBackGround" format="reference"/>
     </declare-styleable>
+
+    <style name="dialogWindowAnimation">
+        <item name="android:windowEnterAnimation">@anim/num_picker_dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/num_picker_dialog_out</item>
+    </style>
+
+    <declare-styleable name="NumPickView">
+        <attr name="totalNum" format="integer"/>
+        <attr name="showNum" format="integer"/>
+        <attr name="textColor" format="color"/>
+    </declare-styleable>
+
+    <style name="time_dialog" parent="android:Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+
+    <!-- Dialog 样式 -->
+    <style name="DialogTheme" parent="@android:style/Theme.Dialog">
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 模糊 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 遮罩层 -->
+        <item name="android:backgroundDimAmount">0.5</item>
+    </style>
 </resources>

@@ -4,14 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.xtao.xindian.view.RoundRectImageView
-        android:id="@+id/pic_settle_food_url"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:src="@drawable/test"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,11 +11,19 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tv_settle_food_no"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="1"/>
+
+        <TextView
             android:id="@+id/tv_settle_food_name"
-            android:layout_marginStart="10dp"
+            android:layout_margin="10dp"
             android:gravity="center_vertical"
             android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:textSize="20sp"
             android:text="麻辣香锅"
             android:layout_height="match_parent" />
@@ -32,8 +32,9 @@
             android:id="@+id/tv_settle_food_amount"
             android:gravity="center"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="x3"
+            android:layout_weight="2"
+            android:text="x3333"
+            android:drawableRight="@drawable/pic_dialog_settle_edit"
             android:textColor="#F00"
             android:textSize="16sp"
             android:layout_height="match_parent" />

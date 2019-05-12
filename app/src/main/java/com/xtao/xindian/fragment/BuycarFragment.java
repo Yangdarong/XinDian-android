@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.xtao.xindian.R;
+import com.xtao.xindian.activities.BuycarSettleActivity;
 import com.xtao.xindian.common.OrderFoodsResultType;
 import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.task.BuycarCostUpdateTask;
@@ -113,7 +114,24 @@ public class BuycarFragment extends Fragment {
 
         initView(view);
         //initData();
+        initListener();
         return view;
+    }
+
+    private void initListener() {
+        etBuyCarBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 跳转到结算页
+                Intent intent = new Intent(getActivity(), BuycarSettleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("uId", user.getuId());
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     private void initView(View view) {

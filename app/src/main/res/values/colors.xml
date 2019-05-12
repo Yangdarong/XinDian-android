@@ -3,6 +3,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="background">#FFFFFF</color>
 
     <!--自定义颜色表-->
     <color name="CutOfLine">#f5f7f9</color>

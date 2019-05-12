@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#00FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:orientation="vertical"
+        android:background="@drawable/button_white_shape">
+
+        <TextView
+            android:id="@+id/tv_dialog_settle_food_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="确认订单"
+            android:textColor="@color/colorTheme"
+            android:textSize="25sp" />
+
+
+        <LinearLayout
+            android:layout_marginTop="15dp"
+            android:id="@+id/ll_dialog_settle_food_context"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tv_dialog_settle_food_title"
+            android:orientation="vertical">
+
+
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:layout_marginStart="5dp"
+                    android:gravity="center"
+                    android:text="数量"
+                    android:textColor="#000"
+                    android:textSize="22sp" />
+
+                <com.xtao.xindian.view.NumberControllerView
+                    android:id="@+id/ncv_dialog_settle_food_num"
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    app:value="1"
+                    app:minValue="1"
+                    app:maxValue="19"
+                    app:numTextBackGround="@color/white"
+                    app:addButtonBackground="@color/white"
+                    app:subButtonBackground="@color/white">
+                </com.xtao.xindian.view.NumberControllerView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="25dp"
+                android:background="#c0c0c0" />
+
+
+            <LinearLayout
+                android:id="@+id/ll_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_dialog_settle_food_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="取 消"
+                    android:textSize="22sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#c0c0c0" />
+
+                <TextView
+                    android:id="@+id/tv_dialog_settle_food_submit"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="确 定"
+                    android:textColor="@color/colorTheme"
+                    android:textSize="22sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

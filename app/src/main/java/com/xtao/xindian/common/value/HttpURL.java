@@ -1,16 +1,25 @@
 package com.xtao.xindian.common.value;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Looper;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.xtao.xindian.common.CommonResultType;
+
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpURL {
 
-     //public static final String IP_ADDRESS = "http://192.168.0.104:8080/xindian";
-     public static final String IP_ADDRESS = "http://192.168.1.101:8787/xindian";
+     public static final String IP_ADDRESS = "http://192.168.0.115:8080/xindian";
+     //public static final String IP_ADDRESS = "http://192.168.1.101:8787/xindian";
 
      public static final String MER_DEFAULT_PIC = "/upload/mers/default.png";
      public static final String FOOD_DEFAULT_PIC = "/upload/foods/default.png";
@@ -40,4 +49,56 @@ public class HttpURL {
           return bitmap;
      }
 
+     public static String getCommonResultType(String urlStr, String body, Context context) {
+          try {
+               URL url = new URL(urlStr);
+               HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+               connection.setRequestMethod("POST");
+               connection.setDoInput(true);
+               connection.setDoOutput(true);
+               connection.setUseCaches(false);
+               connection.connect();
+
+               BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                       connection.getOutputStream(), "UTF-8"));
+               writer.write(body);
+               writer.close();
+
+               int responseCode = connection.getResponseCode();
+               if (responseCode == HttpURLConnection.HTTP_OK) {    // 200
+                    InputStream inputStream = connection.getInputStream();
+                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                    byte[] data = new byte[1024];
+                    int len = 0;
+                    while ((len = inputStream.read(data)) != -1) {
+                         outStream.write(data, 0, len);
+                    }
+                    inputStream.close();
+
+                    String jsonCode = new String(outStream.toByteArray());
+                    Gson gson = new Gson();
+
+                    CommonResultType resultType = gson.fromJson(jsonCode, CommonResultType.class);
+                    if (resultType.getState() == 1) {   // 找寻到标题信息
+
+                         return resultType.getMessage();
+
+                    } else {    // 没有相关的标题
+                         Looper.prepare();
+                         Toast.makeText(context, "服务器数据丢失，请重试", Toast.LENGTH_SHORT).show();
+                         Looper.loop();
+                    }
+
+               } else {    // 网络错误
+                    Looper.prepare();
+                    Toast.makeText(context, "无法连接到服务器,请重试", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+               }
+          } catch (Exception e) {
+               e.printStackTrace();
+          }
+
+          return null;
+     }
 }
