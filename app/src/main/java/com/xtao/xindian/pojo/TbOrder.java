@@ -14,6 +14,9 @@ public class TbOrder {
     private Timestamp oFinishTime;
     private String oAddress;
     private String oNote;
+    private float oCost;
+    private int ouId;
+    private TbOrderUser orderUser;
 
     // 外键
     private TbMer   mer;
@@ -116,5 +119,29 @@ public class TbOrder {
 
     public void setUser(TbUser user) {
         this.user = user;
+    }
+
+    public float getoCost() {
+        return oCost;
+    }
+
+    public void setoCost(float oCost) {
+        this.oCost = oCost;
+    }
+
+    public int getOuId() {
+        return ouId;
+    }
+
+    public void setOuId(int ouId) {
+        this.ouId = ouId;
+    }
+
+    public TbOrderUser getOrderUser() {
+        return orderUser;
+    }
+
+    public void setOrderUser(TbOrderUser orderUser) {
+        this.orderUser = orderUser;
     }
 }

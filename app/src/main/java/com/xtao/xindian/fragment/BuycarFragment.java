@@ -122,12 +122,12 @@ public class BuycarFragment extends Fragment {
         etBuyCarBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 跳转到结算页
-                Intent intent = new Intent(getActivity(), BuycarSettleActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("uId", user.getuId());
-                intent.putExtras(bundle);
-                startActivity(intent);
+            // 跳转到结算页
+            Intent intent = new Intent(getActivity(), BuycarSettleActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("uId", user.getuId());
+            intent.putExtras(bundle);
+            startActivity(intent);
             }
         });
 
