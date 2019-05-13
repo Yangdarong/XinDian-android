@@ -276,6 +276,14 @@ public class BuycarFragment extends Fragment {
             return view;
         }
 
+        class ViewHolderM {
+            private TextView tvDelete;
+
+            public ViewHolderM(View view) {
+                tvDelete = view.findViewById(R.id.tv_delete);
+            }
+        }
+
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;

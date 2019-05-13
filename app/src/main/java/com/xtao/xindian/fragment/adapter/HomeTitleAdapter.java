@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.xtao.xindian.fragment.homeDetailPage.HomeBakePageFragment;
 import com.xtao.xindian.fragment.homeDetailPage.HomeChoicePageFragment;
-import com.xtao.xindian.fragment.homeDetailPage.HomeMenuPageFragment;
+import com.xtao.xindian.fragment.homeDetailPage.HomeWesternStylePageFragment;
 import com.xtao.xindian.fragment.homeDetailPage.HomeNewplayerPageFragment;
 import com.xtao.xindian.fragment.homeDetailPage.HomeNewtastePageFragment;
 import com.xtao.xindian.fragment.homeDetailPage.HomeSnackPageFragment;
@@ -36,7 +36,7 @@ public class HomeTitleAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 1: return new HomeNewplayerPageFragment();
             case 2: return new HomeNewtastePageFragment();
-            case 3: return new HomeMenuPageFragment();
+            case 3: return new HomeWesternStylePageFragment();
             case 4: return new HomeBakePageFragment();
             case 5: return new HomeSnackPageFragment();
             case 6: return new HomeDrinkPageFragment();
