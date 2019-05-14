@@ -1,6 +1,7 @@
 package com.xtao.xindian.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
@@ -13,11 +14,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.xtao.xindian.R;
+import com.xtao.xindian.activities.HomeSearchActivity;
 import com.xtao.xindian.common.TitleResultType;
 import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.fragment.adapter.HomeTitleAdapter;
@@ -40,6 +43,8 @@ public class HomeFragment extends Fragment {
     private ProgressDialog progressDialog;
 
     private String TITLES_URL = HttpURL.IP_ADDRESS + "/title/queryTitles.json";
+    // et_home_page_search
+    private EditText etHomePageSearch;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -53,7 +58,7 @@ public class HomeFragment extends Fragment {
 
         mTlHome = view.findViewById(R.id.tl_top_nav);
         mVpHome = view.findViewById(R.id.vp_home_tab_content);
-
+        etHomePageSearch = view.findViewById(R.id.et_home_page_search);
 
         initView();
         initData();
@@ -62,7 +67,13 @@ public class HomeFragment extends Fragment {
     }
 
     private void initListener() {
-
+        etHomePageSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), HomeSearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initData() {
@@ -140,6 +151,8 @@ public class HomeFragment extends Fragment {
         progressDialog.setMessage("请稍后...");
         progressDialog.setCancelable(false);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);  // 圆形旋转
+
+
     }
 
     private class MyAsyncTask extends AsyncTask<String, Integer, List<TbTitle>> {

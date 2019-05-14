@@ -241,7 +241,7 @@ public class BuycarFragment extends Fragment {
 
         @Override
         public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            View view = View.inflate(getContext(), R.layout.layout_food_mer, null);
+            final View view = View.inflate(getContext(), R.layout.layout_food_mer, null);
             picBuyCarFoodUrl = view.findViewById(R.id.pic_buycar_food_url);
             String foodIconUrl = childList.get(groupPosition).get(childPosition).getFood().getfUrl();
             if (ValueUtils.isNull(foodIconUrl)) {
@@ -257,7 +257,6 @@ public class BuycarFragment extends Fragment {
             nvcBuyCarFoodItem = view.findViewById(R.id.ncv_buycar_food_item);
             nvcBuyCarFoodItem.setValue(childList.get(groupPosition).get(childPosition).getOfAmount());
             nvcBuyCarFoodItem.setValueChangeListener(new NumberControllerView.onNumChangedListener() {
-
                 @Override
                 public void addValueListener(View v, int value) {
                     new FoodNcvAddTask().execute(childList.get(groupPosition).get(childPosition));
@@ -270,6 +269,15 @@ public class BuycarFragment extends Fragment {
                     new FoodNcvSubTask().execute(childList.get(groupPosition).get(childPosition));
                     // 更新价格
                     new BuycarCostUpdateTask().execute(tvBuyCarMoney, user.getuId());
+                }
+            });
+            final ViewHolderM viewHolderM = new ViewHolderM(view);
+            view.setTag(viewHolderM);
+
+            viewHolderM.tvDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 删除时间，回调接口ha
                 }
             });
 
