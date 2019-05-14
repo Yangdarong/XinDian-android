@@ -14,7 +14,7 @@
             android:layout_width="0dp"
             android:layout_weight="13"
             android:layout_height="wrap_content"
-            android:layout_marginStart="22dp"
+
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
             android:layout_marginEnd="1dp"
@@ -26,10 +26,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <CheckBox
+                    android:id="@+id/cb_buycar_select"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="0dp"/>
+
                 <com.xtao.xindian.view.RoundRectImageView
                     android:id="@+id/pic_buycar_food_url"
                     android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:layout_width="60dp"
@@ -91,20 +96,5 @@
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="0dp"
-            android:gravity="right">
-
-            <TextView
-                android:id="@+id/tv_delete"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:background="#F00"
-                android:text="删除"
-                android:textColor="#FFF"
-                android:gravity="center" />
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

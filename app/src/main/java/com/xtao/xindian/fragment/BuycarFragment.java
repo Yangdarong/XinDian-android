@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
@@ -48,21 +49,23 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class BuycarFragment extends Fragment {
 
     // UI 控件
     private TextView tvBuyCarTitle;
-    private TextView tvBuyCarAdmin;
+    private TextView tvBuyCarDelete;
     private TextView tvBuyCarNonFoods;
 
     // 核心控件
     private ExpandableListView elvBuyCarList;
+    private BuyCarListAdapter adapter;
 
-    private RadioButton rbBuyCarSelectAll;
-    private TextView tvBuyCarDelete;
+    private CheckBox cbBuyCarSelectAll;
     private TextView tvBuyCarMoney;
     private EditText etBuyCarBuy;
 
@@ -73,6 +76,7 @@ public class BuycarFragment extends Fragment {
 
     private List<TbMer> groupList = new ArrayList<>();
     private List<List<TbOrderFood>> childList = new ArrayList<>();
+    private List<List<Boolean>> childCheckBox;
 
     private ProgressDialog progressDialog;
 
@@ -112,12 +116,14 @@ public class BuycarFragment extends Fragment {
             user = UserUtils.readLoginInfo(getActivity());
         }
 
+        childCheckBox = new ArrayList<>();
+        adapter = new BuyCarListAdapter();
         initView(view);
         //initData();
         initListener();
         return view;
     }
-
+    private boolean flag = false;
     private void initListener() {
         etBuyCarBuy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,19 +136,74 @@ public class BuycarFragment extends Fragment {
             startActivity(intent);
             }
         });
+        cbBuyCarSelectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!flag) {
+                    flag = true;
+                    modifyChildCheckList(flag);
 
+                } else {
+                    flag = false;
+                    modifyChildCheckList(flag);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
 
+        // 删除选中的
+        tvBuyCarDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 移除选中项
+
+                // 如果子项目被删除，父项目也会被删除
+
+                // 发送网络请求
+            }
+        });
+    }
+
+    private void modifyChildCheckList(boolean flag) {
+        for (int i = 0; i < childCheckBox.size(); i++) {
+            for (int j = 0; j < childCheckBox.get(i).size() ; j++) {
+                childCheckBox.get(i).set(j, flag);
+            }
+        }
+    }
+
+    private boolean allAreTrueChildCheckList() {
+        for (int i = 0; i < childCheckBox.size(); i++) {
+            for (int j = 0; j < childCheckBox.get(i).size() ; j++) {
+                if(childCheckBox.get(i).get(j) == Boolean.FALSE) {
+                    return false;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean existTrueChildCheckList() {
+        for (int i = 0; i < childCheckBox.size(); i++) {
+            for (int j = 0; j < childCheckBox.get(i).size() ; j++) {
+                if(childCheckBox.get(i).get(j) == Boolean.TRUE) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void initView(View view) {
         tvBuyCarTitle = view.findViewById(R.id.tv_buycar_title);
-        tvBuyCarAdmin = view.findViewById(R.id.tv_buycar_admin);
+        tvBuyCarDelete = view.findViewById(R.id.tv_buycar_delete);
         tvBuyCarNonFoods = view.findViewById(R.id.tv_buycar_nonfoods);
 
         elvBuyCarList = view.findViewById(R.id.elv_buycar_list);
 
-        rbBuyCarSelectAll = view.findViewById(R.id.rb_buycar_selectall);
-        tvBuyCarDelete = view.findViewById(R.id.tv_buycar_delete);
+        cbBuyCarSelectAll = view.findViewById(R.id.cb_buycar_selectall);
         tvBuyCarMoney = view.findViewById(R.id.tv_buycar_money);
         etBuyCarBuy = view.findViewById(R.id.et_buycar_buy);
 
@@ -153,6 +214,7 @@ public class BuycarFragment extends Fragment {
         progressDialog.setMessage("请稍后...");
         progressDialog.setCancelable(false);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
     }
 
     private void initData() {
@@ -167,6 +229,7 @@ public class BuycarFragment extends Fragment {
         orderFoods = new ArrayList<>();
         orderFoods.clear();
         if (user.getuId() != 0)
+
             new BuyCarAsyncTask().execute(QUERY_BUY_CAR);
         else {
 
@@ -271,25 +334,27 @@ public class BuycarFragment extends Fragment {
                     new BuycarCostUpdateTask().execute(tvBuyCarMoney, user.getuId());
                 }
             });
-            final ViewHolderM viewHolderM = new ViewHolderM(view);
-            view.setTag(viewHolderM);
-
-            viewHolderM.tvDelete.setOnClickListener(new View.OnClickListener() {
+            CheckBox cbBuycarSelect = view.findViewById(R.id.cb_buycar_select);
+            cbBuycarSelect.setChecked(getCheck(groupPosition, childPosition));
+            cbBuycarSelect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // 删除时间，回调接口ha
+                    // 更新状态
+                    updateCheck(groupPosition, childPosition);
+                    Toast.makeText(getActivity(), "你选择:" + groupPosition + ":" + childPosition + "=" + getCheck(groupPosition, childPosition), Toast.LENGTH_SHORT).show();
+                    if (existTrueChildCheckList()) {
+                        tvBuyCarDelete.setVisibility(View.VISIBLE);
+                        if (allAreTrueChildCheckList()) {
+                            cbBuyCarSelectAll.setChecked(true);
+                            flag = true;
+                        }
+                    } else {
+                        tvBuyCarDelete.setVisibility(View.VISIBLE);
+                    }
                 }
             });
 
             return view;
-        }
-
-        class ViewHolderM {
-            private TextView tvDelete;
-
-            public ViewHolderM(View view) {
-                tvDelete = view.findViewById(R.id.tv_delete);
-            }
         }
 
         @Override
@@ -307,7 +372,8 @@ public class BuycarFragment extends Fragment {
                 // 消除控件
                 myLayout.removeView(tvBuyCarNonFoods);
 
-                elvBuyCarList.setAdapter(new BuyCarListAdapter());
+                adapter = new BuyCarListAdapter();
+                elvBuyCarList.setAdapter(adapter);
                 // 自动展开
                 for (int i = 0; i < groupList.size(); i++) {
                     elvBuyCarList.expandGroup(i);
@@ -366,14 +432,18 @@ public class BuycarFragment extends Fragment {
 
                         for (int i = 0; i < orders.size(); i++) {
                             List<TbOrderFood> foods = new ArrayList<>();
+                            List<Boolean> checkList = new ArrayList<>();
                             for (int j = 0; j < orderFoods.size(); j++) {
                                 // 更新总金额
                                  if (orders.get(i).getoId() == orderFoods.get(j).getOrder().getoId()) {
                                      foods.add(orderFoods.get(j));
                                      cost += orderFoods.get(j).getOfAmount() * orderFoods.get(j).getFood().getfDPrice();
+
+                                    checkList.add(Boolean.FALSE);
                                  }
                             }
                             addData(orders.get(i).getMer(), foods);
+                            addCheck(checkList);
                         }
 
                         return resultType.getMessage();
@@ -400,5 +470,18 @@ public class BuycarFragment extends Fragment {
     private void addData(TbMer mer, List<TbOrderFood> foods) {
         groupList.add(mer);
         childList.add(foods);
+    }
+
+    private void addCheck(List<Boolean> checkList) {
+        childCheckBox.add(checkList);
+    }
+
+    private void updateCheck(int groupPosition, int childPosition) {
+        Boolean check = childCheckBox.get(groupPosition).get(childPosition);
+        childCheckBox.get(groupPosition).set(childPosition, check == Boolean.FALSE);
+    }
+
+    private boolean getCheck(int groupPosition, int childPosition) {
+        return childCheckBox.get(groupPosition).get(childPosition);
     }
 }
