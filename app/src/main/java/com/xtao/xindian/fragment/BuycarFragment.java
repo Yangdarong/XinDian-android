@@ -1,5 +1,6 @@
 package com.xtao.xindian.fragment;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -8,6 +9,8 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +34,7 @@ import com.xtao.xindian.common.task.BuycarCostUpdateTask;
 import com.xtao.xindian.common.task.FoodNcvAddTask;
 import com.xtao.xindian.common.task.FoodNcvSubTask;
 import com.xtao.xindian.common.value.HttpURL;
+import com.xtao.xindian.dialog.CommonDialog;
 import com.xtao.xindian.pojo.TbFood;
 import com.xtao.xindian.pojo.TbMer;
 import com.xtao.xindian.pojo.TbOrder;
@@ -53,6 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class BuycarFragment extends Fragment {
 
@@ -80,7 +85,8 @@ public class BuycarFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
-    private final String QUERY_BUY_CAR = HttpURL.IP_ADDRESS + "/order/queryBayCar.json";
+    private final String QUERY_BUY_CAR = HttpURL.IP_ADDRESS + "/order/queryBuyCar.json";
+    private final String DELETE_BUY_CAR = HttpURL.IP_ADDRESS + "/order/deleteBuyCar.json";
 
     private Intent intent;
     private Bundle bundle;
@@ -95,6 +101,9 @@ public class BuycarFragment extends Fragment {
 
     private float cost;     // 计算总金额
     private NumberControllerView nvcBuyCarFoodItem;
+
+    private List<TbOrderFood> deleteOrderFoods;
+    private List<TbOrder> deleteOrders;
 
     public BuycarFragment() {
         // 当类被构造的时候,
@@ -116,7 +125,6 @@ public class BuycarFragment extends Fragment {
             user = UserUtils.readLoginInfo(getActivity());
         }
 
-        childCheckBox = new ArrayList<>();
         adapter = new BuyCarListAdapter();
         initView(view);
         //initData();
@@ -128,12 +136,13 @@ public class BuycarFragment extends Fragment {
         etBuyCarBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            // 跳转到结算页
-            Intent intent = new Intent(getActivity(), BuycarSettleActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("uId", user.getuId());
-            intent.putExtras(bundle);
-            startActivity(intent);
+                List<Map<Integer, Integer>> list = getSelect();
+
+                for (Map<Integer, Integer> map : list) {
+                    for (int key : map.keySet()) {
+                        Toast.makeText(getContext(), "要删除=" +key + ":" + map.get(key), Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
         cbBuyCarSelectAll.setOnClickListener(new View.OnClickListener() {
@@ -142,10 +151,12 @@ public class BuycarFragment extends Fragment {
                 if (!flag) {
                     flag = true;
                     modifyChildCheckList(flag);
+                    tvBuyCarDelete.setVisibility(View.VISIBLE);
 
                 } else {
                     flag = false;
                     modifyChildCheckList(flag);
+                    tvBuyCarDelete.setVisibility(View.INVISIBLE);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -155,13 +166,108 @@ public class BuycarFragment extends Fragment {
         tvBuyCarDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 移除选中项
+                new CommonDialog(getContext(), R.style.DialogTheme, "确定要删除选中的菜品吗?", new CommonDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if (confirm) {
+                            // 1. 移除选中项
+                            // 1.1 如果子项目被删除，父项目也会被删除
+                            List<Map<Integer, Integer>> deleteList = getSelect();
+                            deleteOrderFoods = new ArrayList<>();
+                            deleteOrders = new ArrayList<>();
+                            for (Map<Integer, Integer> map : deleteList) {
+                                for (int key : map.keySet()) {
+                                    deleteChildWithGroup(key, map.get(key));
+                                }
+                            }
+                            // 2 发送网络请求
+                            // 2.1 封装成JSON字符串
+                            String json = packageJsonCode(deleteOrders, deleteOrderFoods);
 
-                // 如果子项目被删除，父项目也会被删除
+                            new CommonTask().execute(DELETE_BUY_CAR, json);
+                            // 2.2 异步发送网络数据
+                            dialog.dismiss();
 
-                // 发送网络请求
+                        }
+                    }
+                }).setTitle("删除菜品").show();
+
             }
         });
+    }
+
+    /**
+     *
+     * @param deleteOrders
+     * @param deleteOrderFoods
+     * @return
+     */
+    private String packageJsonCode(List<TbOrder> deleteOrders, List<TbOrderFood> deleteOrderFoods) {
+        OrderFoodsResultType resultType = new OrderFoodsResultType();
+        resultType.setState(1);
+        resultType.setOrders(deleteOrders);
+        resultType.setOrderFoods(deleteOrderFoods);
+        resultType.setMessage("这是需要删除的信息");
+
+        Gson gson = new Gson();
+        return gson.toJson(resultType);
+    }
+
+
+    /**
+     * 删除对应的子项,如果没有子项,父项一并删除
+     * @param groupPosition
+     * @param childPosition
+     */
+    private void deleteChildWithGroup(int groupPosition, int childPosition) {
+        // 1. 获取删除子项的记录
+        TbOrderFood orderFood = childList.get(groupPosition).get(childPosition);
+        deleteOrderFoods.add(orderFood);
+
+        // 1.1 删除子项
+        childList.get(groupPosition).remove(childPosition);
+        childCheckBox.get(groupPosition).remove(childPosition);
+
+        // 2. 如果父项没有了子列表
+        if (childList.get(groupPosition).size() == 0) {
+            // 2.2 获取父项记录
+            TbOrder order = new TbOrder();
+            order.setoId(orderFood.getOrder().getoId());
+            deleteOrders.add(order);
+            // 3. 从groupPosition + 1开始,所有子列表往前进一位
+            childList.remove(groupPosition);
+            childCheckBox.remove(groupPosition);
+            // 4. 删除父项
+            groupList.remove(groupPosition);
+        }
+    }
+
+    /**
+     * 获取购物车列表中被选中的项目
+     * @return
+     */
+    private List<Map<Integer, Integer>> getSelect() {
+        List<Map<Integer, Integer>> list = new ArrayList<>();
+        for (int i = 0; i < childCheckBox.size(); i++) {
+            for (int j = 0; j < childCheckBox.get(i).size() ; j++) {
+                Map<Integer, Integer> map = new HashMap<>();
+                if(childCheckBox.get(i).get(j) == Boolean.TRUE) {
+
+                    map.put(i, j);
+                    list.add(map);
+                }
+            }
+        }
+
+        return list;
+    }
+
+    private void toSettle() {
+        Intent intent = new Intent(getActivity(), BuycarSettleActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("uId", user.getuId());
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private void modifyChildCheckList(boolean flag) {
@@ -181,7 +287,7 @@ public class BuycarFragment extends Fragment {
             }
         }
 
-        return false;
+        return true;
     }
 
     private boolean existTrueChildCheckList() {
@@ -228,6 +334,9 @@ public class BuycarFragment extends Fragment {
         orders.clear();
         orderFoods = new ArrayList<>();
         orderFoods.clear();
+
+        childCheckBox = new ArrayList<>();
+        childCheckBox.clear();
         if (user.getuId() != 0)
 
             new BuyCarAsyncTask().execute(QUERY_BUY_CAR);
@@ -241,6 +350,8 @@ public class BuycarFragment extends Fragment {
         super.onResume();
         // 重新刷新购物车界面
         initData();
+
+        childCheckBox.clear();
     }
 
     private class BuyCarListAdapter extends BaseExpandableListAdapter {
@@ -341,15 +452,20 @@ public class BuycarFragment extends Fragment {
                 public void onClick(View v) {
                     // 更新状态
                     updateCheck(groupPosition, childPosition);
-                    Toast.makeText(getActivity(), "你选择:" + groupPosition + ":" + childPosition + "=" + getCheck(groupPosition, childPosition), Toast.LENGTH_SHORT).show();
-                    if (existTrueChildCheckList()) {
+//                    Toast.makeText(getActivity(), "你选择:" + groupPosition + ":" + childPosition + "=" + getCheck(groupPosition, childPosition), Toast.LENGTH_SHORT).show();
+                    if (existTrueChildCheckList()) {    // 至少有一个是真的
                         tvBuyCarDelete.setVisibility(View.VISIBLE);
-                        if (allAreTrueChildCheckList()) {
+                        if (allAreTrueChildCheckList()) {   // 都是真的
                             cbBuyCarSelectAll.setChecked(true);
                             flag = true;
+                        } else {    // 至少有一个是假的
+                            cbBuyCarSelectAll.setChecked(false);
+                            flag = false;
                         }
-                    } else {
-                        tvBuyCarDelete.setVisibility(View.VISIBLE);
+                    } else {    // 都不为真
+                        tvBuyCarDelete.setVisibility(View.INVISIBLE);
+                        cbBuyCarSelectAll.setChecked(false);
+                        flag = false;
                     }
                 }
             });
@@ -360,6 +476,28 @@ public class BuycarFragment extends Fragment {
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
+        }
+    }
+
+    private class CommonTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            adapter.notifyDataSetChanged();
+            progressDialog.dismiss();
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            return HttpURL.getCommonResultType(strings[0], strings[1], getContext());
         }
     }
 
@@ -429,7 +567,7 @@ public class BuycarFragment extends Fragment {
                         // 将用户实体带到主界面
                         orders = resultType.getOrders();
                         orderFoods = resultType.getOrderFoods();
-
+                        childCheckBox = new ArrayList<>();
                         for (int i = 0; i < orders.size(); i++) {
                             List<TbOrderFood> foods = new ArrayList<>();
                             List<Boolean> checkList = new ArrayList<>();
