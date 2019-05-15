@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.starDetailPage.StarDelicateStrategyPageFragment">
+
+
+    <com.xtao.xindian.view.HorizontalListView
+        android:id="@+id/hlv_delicate_strategy_user_list"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#000">
+
+    </com.xtao.xindian.view.HorizontalListView>
+
+    <ListView
+        android:id="@+id/lv_delicate_strategy_detail"
+        android:layout_marginTop="72dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            android:background="@color/white"/>
+
+        <TextView
+            android:id="@+id/tv_delicate_strategy_publish"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent"
+            android:text="我要发布"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:gravity="center"
+
+            android:layout_gravity="bottom"/>
+    </LinearLayout>
+</FrameLayout>

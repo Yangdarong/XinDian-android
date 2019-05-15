@@ -23,8 +23,10 @@ public class BuycarCostUpdateTask extends AsyncTask<Object, Integer, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        if (!s.isEmpty()) {
+        if (s != null) {
             tv.setText("￥".concat(s));
+        } else {
+            tv.setText("￥".concat("0"));
         }
     }
 

@@ -77,13 +77,19 @@
         <activity
             android:name=".activities.BaiduMapActivity"
             android:theme="@style/AppTheme.NoActionBarWithBackGround" />
+        <activity
+            android:name=".activities.StrategyPublishActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround"/>
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="WMYERKAj9iM0UrbOsY47rwreKPhzUtCo" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"></service>
+            android:process=":remote" />
+
     </application>
+
 </manifest>

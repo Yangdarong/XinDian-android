@@ -133,16 +133,17 @@ public class BuycarFragment extends Fragment {
     }
     private boolean flag = false;
     private void initListener() {
+        if (groupList == null && childList == null) {
+            cbBuyCarSelectAll.setVisibility(View.INVISIBLE);
+        } else {
+            cbBuyCarSelectAll.setVisibility(View.VISIBLE);
+        }
+
         etBuyCarBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Map<Integer, Integer>> list = getSelect();
+                toSettle();
 
-                for (Map<Integer, Integer> map : list) {
-                    for (int key : map.keySet()) {
-                        Toast.makeText(getContext(), "要删除=" +key + ":" + map.get(key), Toast.LENGTH_SHORT).show();
-                    }
-                }
             }
         });
         cbBuyCarSelectAll.setOnClickListener(new View.OnClickListener() {
@@ -172,20 +173,18 @@ public class BuycarFragment extends Fragment {
                         if (confirm) {
                             // 1. 移除选中项
                             // 1.1 如果子项目被删除，父项目也会被删除
-                            List<Map<Integer, Integer>> deleteList = getSelect();
                             deleteOrderFoods = new ArrayList<>();
                             deleteOrders = new ArrayList<>();
-                            for (Map<Integer, Integer> map : deleteList) {
-                                for (int key : map.keySet()) {
-                                    deleteChildWithGroup(key, map.get(key));
-                                }
-                            }
+                            deleteChildWithGroup();
+
+
                             // 2 发送网络请求
                             // 2.1 封装成JSON字符串
                             String json = packageJsonCode(deleteOrders, deleteOrderFoods);
-
-                            new CommonTask().execute(DELETE_BUY_CAR, json);
                             // 2.2 异步发送网络数据
+                            new CommonTask().execute(DELETE_BUY_CAR, json);
+                            // 2.3 更新价格
+                            new BuycarCostUpdateTask().execute(tvBuyCarMoney, user.getuId());
                             dialog.dismiss();
 
                         }
@@ -216,34 +215,37 @@ public class BuycarFragment extends Fragment {
 
     /**
      * 删除对应的子项,如果没有子项,父项一并删除
-     * @param groupPosition
-     * @param childPosition
+
      */
-    private void deleteChildWithGroup(int groupPosition, int childPosition) {
-        // 1. 获取删除子项的记录
-        TbOrderFood orderFood = childList.get(groupPosition).get(childPosition);
-        deleteOrderFoods.add(orderFood);
+    private void deleteChildWithGroup() {
+        while (true) {
+            List<Map<Integer, Integer>> deletes = getSelect();
+            if (deletes == null || deletes.size() == 0) {
+                break;
+            } else {
+                Map<Integer, Integer> map = deletes.get(0);
+                for (int groupPosition : map.keySet()) {
+                    int a = map.get(groupPosition);
+                    TbOrderFood orderFood = childList.get(groupPosition).get(a);
+                    deleteOrderFoods.add(orderFood);
+                    childList.get(groupPosition).remove(a);
+                    childCheckBox.get(groupPosition).remove(a);
 
-        // 1.1 删除子项
-        childList.get(groupPosition).remove(childPosition);
-        childCheckBox.get(groupPosition).remove(childPosition);
-
-        // 2. 如果父项没有了子列表
-        if (childList.get(groupPosition).size() == 0) {
-            // 2.2 获取父项记录
-            TbOrder order = new TbOrder();
-            order.setoId(orderFood.getOrder().getoId());
-            deleteOrders.add(order);
-            // 3. 从groupPosition + 1开始,所有子列表往前进一位
-            childList.remove(groupPosition);
-            childCheckBox.remove(groupPosition);
-            // 4. 删除父项
-            groupList.remove(groupPosition);
+                    if (childList.get(groupPosition).size() == 0) {
+                        TbOrder order = new TbOrder();
+                        order.setoId(orderFood.getOrder().getoId());
+                        deleteOrders.add(order);
+                        childList.remove(groupPosition);
+                        childCheckBox.remove(groupPosition);
+                        groupList.remove(groupPosition);
+                    }
+                }
+            }
         }
     }
 
     /**
-     * 获取购物车列表中被选中的项目
+     * 获取购物车列表中被选中的项目,刷新
      * @return
      */
     private List<Map<Integer, Integer>> getSelect() {

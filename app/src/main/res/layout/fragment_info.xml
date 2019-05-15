@@ -90,7 +90,7 @@
                     style="@style/Custom.TabRadioButton"
                     android:layout_marginStart="14dp"
                     android:drawableStart="@drawable/rb_my_cookbook"
-                    android:text="菜谱"
+                    android:text="待确认"
                     android:textColor="#000"
                     android:textSize="16sp" />
 
@@ -104,7 +104,7 @@
                     style="@style/Custom.TabRadioButton"
                     android:layout_marginStart="14dp"
                     android:drawableStart="@drawable/rb_my_menu"
-                    android:text="菜单"
+                    android:text="待发货"
                     android:textColor="#000"
                     android:textSize="16sp" />
 
@@ -118,7 +118,7 @@
                     style="@style/Custom.TabRadioButton"
                     android:layout_marginStart="14dp"
                     android:drawableStart="@drawable/rb_my_album"
-                    android:text="相册"
+                    android:text="待收货"
                     android:textColor="#000"
                     android:textSize="16sp" />
             </RadioGroup>
@@ -229,13 +229,13 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="12dp"
                         android:layout_marginEnd="12dp"
-                        android:src="@drawable/iv_my_topic" />
+                        android:src="@drawable/iv_my_collection" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="话题"
+                        android:text="我的关注"
                         android:textColor="#000"
                         android:textSize="16sp" />
 
@@ -318,7 +318,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="12dp"
                         android:layout_marginEnd="12dp"
-                        android:src="@drawable/iv_my_collection" />
+                        android:src="@drawable/iv_my_topic" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -366,138 +366,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="下载"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="end">
-
-                        <ImageView
-                            android:layout_width="6dp"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginEnd="22dp"
-                            android:src="@drawable/iv_select_goto" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="370dp"
-                    android:layout_height="1dp"
-                    android:layout_gravity="end"
-                    android:background="#eee">
-
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/Custom.ListLinearLayoutButton"
-                    android:background="#FFF">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="12dp"
-                        android:src="@drawable/iv_my_log" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="美食日志"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="end">
-
-                        <ImageView
-                            android:layout_width="6dp"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginEnd="22dp"
-                            android:src="@drawable/iv_select_goto" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:background="@color/CutOfLine" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:background="#FFF"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    style="@style/Custom.ListLinearLayoutButton"
-                    android:background="#FFF">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="12dp"
-                        android:src="@drawable/iv_my_purse" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="钱包"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="end">
-
-                        <ImageView
-                            android:layout_width="6dp"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginEnd="22dp"
-                            android:src="@drawable/iv_select_goto" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="370dp"
-                    android:layout_height="1dp"
-                    android:layout_gravity="end"
-                    android:background="#eee">
-
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/Custom.ListLinearLayoutButton"
-                    android:background="#FFF"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="12dp"
-                        android:src="@drawable/iv_my_buy" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="食材采购"
+                        android:text="记录"
                         android:textColor="#000"
                         android:textSize="16sp" />
 
@@ -539,49 +408,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="我的动态"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="end">
-
-                        <ImageView
-                            android:layout_width="6dp"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginEnd="22dp"
-                            android:src="@drawable/iv_select_goto" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="370dp"
-                    android:layout_height="1dp"
-                    android:layout_gravity="end"
-                    android:background="#eee">
-
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/Custom.ListLinearLayoutButton"
-                    android:background="#FFF">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="12dp"
-                        android:src="@drawable/iv_my_va" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="小爱童鞋"
+                        android:text="美食日志"
                         android:textColor="#000"
                         android:textSize="16sp" />
 
@@ -599,6 +426,13 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@color/CutOfLine" />
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"

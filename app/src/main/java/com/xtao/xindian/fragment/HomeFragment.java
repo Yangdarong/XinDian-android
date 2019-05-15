@@ -77,71 +77,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void initData() {
-        // 1、 获取首页的标题信息
-        // 访问 SSM 后台 需要开启子线程
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL("http://192.168.1.100:8080/xindian/title/queryTitles.json");
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-                    connection.setRequestMethod("POST");
-                    connection.setDoInput(true);
-                    connection.setDoOutput(true);
-                    connection.setUseCaches(false);
-                    connection.connect();
-
-                    String body = "tFrom=" + 1;
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                            connection.getOutputStream(), "UTF-8"));
-                    writer.write(body);
-                    writer.close();
-
-                    int responseCode = connection.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {    // 200
-                        InputStream inputStream = connection.getInputStream();
-                        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                        byte[] data = new byte[1024];
-                        int len = 0;
-                        while ((len = inputStream.read(data)) != -1) {
-                            outStream.write(data, 0, len);
-                        }
-                        inputStream.close();
-
-                        String jsonCode = new String(outStream.toByteArray());
-                        Gson gson = new Gson();
-
-                        TitleResultType titleResultType = gson.fromJson(jsonCode, TitleResultType.class);
-                        if (titleResultType.getState() == 1) {   // 找寻到标题信息
-                            // 将用户实体带到主界面
-                            titles = titleResultType.getTitles();
-
-                            mVpHome.setAdapter(new HomeTitleAdapter(getChildFragmentManager(), titles));
-                            mTlHome.setupWithViewPager(mVpHome);
-
-                        } else {    // 没有相关的标题
-                            Looper.prepare();
-                            Toast.makeText(getActivity(), "服务器数据丢失，请重试", Toast.LENGTH_SHORT).show();
-                            Looper.loop();
-                        }
-
-                    } else {    // 网络错误
-                        Looper.prepare();
-                        Toast.makeText(getActivity(), "无法连接到服务器,请重试", Toast.LENGTH_SHORT).show();
-                        Looper.loop();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();*/
-
-        // 填充标题界面
-        /*mVpHome.setAdapter(new HomeTitleAdapter(getChildFragmentManager(), titles));
-        mTlHome.setupWithViewPager(mVpHome);*/
-
         new MyAsyncTask().execute(TITLES_URL);
     }
 
@@ -229,40 +164,4 @@ public class HomeFragment extends Fragment {
             progressDialog.dismiss();
         }
     }
-
-    final class MorePagerAdapter extends PagerAdapter {
-
-        @Override
-        public int getCount() {
-            return 10;
-        }
-
-        @NonNull
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            TextView tv = new TextView(container.getContext());
-            tv.setText("布局" + position);
-            tv.setTextSize(30.0f);
-            tv.setGravity(Gravity.CENTER);
-            (container).addView(tv);
-            return tv;
-        }
-
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            (container).removeView((View) object);
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "选项" + position;
-        }
-    }
-
 }

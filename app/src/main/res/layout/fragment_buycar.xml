@@ -104,7 +104,7 @@
                 android:textColor="#F00"
                 android:gravity="center"
                 android:textSize="16sp"
-                android:text="￥99.9"/>
+                android:text="￥0"/>
 
 
             <EditText

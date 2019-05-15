@@ -63,7 +63,7 @@ public class BuycarSettleActivity extends AppCompatActivity {
     private float fDPrice;
 
     // 查询购物车
-    private final String QUERY_BUY_CAR = HttpURL.IP_ADDRESS + "/order/queryBayCar.json";
+    private final String QUERY_BUY_CAR = HttpURL.IP_ADDRESS + "/order/queryBuyCar.json";
     // 结账
     private final String QUICK_SETTLE = HttpURL.IP_ADDRESS + "/order/doSettle.json";
     // json 字符串
