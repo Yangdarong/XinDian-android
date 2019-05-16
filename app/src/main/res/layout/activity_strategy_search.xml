@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.StrategySearchActivity">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorTheme"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_strategy_search_keyword"
+            android:layout_width="0dp"
+            android:layout_weight="10"
+            android:textSize="20sp"
+            android:layout_marginStart="5dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_search_shape"/>
+
+        <TextView
+            android:id="@+id/tv_strategy_search_cancel"
+            android:layout_gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1
+"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="取消"
+            android:textSize="18sp"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_strategy_search_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </ListView>
+</LinearLayout>
