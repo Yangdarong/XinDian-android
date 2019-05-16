@@ -9,8 +9,7 @@
     <com.xtao.xindian.view.HorizontalListView
         android:id="@+id/hlv_delicate_strategy_user_list"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="#000">
+        android:layout_height="70dp">
 
     </com.xtao.xindian.view.HorizontalListView>
 

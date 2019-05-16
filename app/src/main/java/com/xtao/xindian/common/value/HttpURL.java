@@ -23,6 +23,7 @@ public class HttpURL {
 
      public static final String MER_DEFAULT_PIC = "/upload/mers/default.png";
      public static final String FOOD_DEFAULT_PIC = "/upload/foods/default.png";
+     public static final String USER_DEFAULT_PIC = "/upload/users/default.png";
 
      public static Bitmap getHttpBitmap(String picUrl) {
           URL pictureUrl = null;
@@ -85,15 +86,13 @@ public class HttpURL {
                          return resultType.getMessage();
 
                     } else {    // 没有相关的标题
-                         Looper.prepare();
-                         Toast.makeText(context, "服务器数据丢失，请重试", Toast.LENGTH_SHORT).show();
-                         Looper.loop();
+                         return resultType.getMessage();
                     }
-
                } else {    // 网络错误
                     Looper.prepare();
-                    Toast.makeText(context, "无法连接到服务器,请重试", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "无法连接到服务器,请重试(错误:" + responseCode + ")", Toast.LENGTH_SHORT).show();
                     Looper.loop();
+                    return null;
                }
           } catch (Exception e) {
                e.printStackTrace();

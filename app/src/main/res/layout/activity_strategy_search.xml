@@ -16,12 +16,13 @@
         <EditText
             android:id="@+id/et_strategy_search_keyword"
             android:layout_width="0dp"
-            android:layout_weight="10"
-            android:textSize="20sp"
+            android:layout_weight="9"
+            android:imeOptions="actionDone"
+            android:textSize="16sp"
             android:layout_marginStart="5dp"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:background="@drawable/home_search_shape"/>
+            android:background="@drawable/button_white_shape"/>
 
         <TextView
             android:id="@+id/tv_strategy_search_cancel"
@@ -38,7 +39,7 @@
 
     <ListView
         android:id="@+id/lv_strategy_search_result"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </ListView>
 </LinearLayout>

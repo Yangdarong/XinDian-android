@@ -182,6 +182,8 @@ public class StrategyPublishActivity extends AppCompatActivity {
 
                                 new PublishTask().execute(PUBLISH_NEW_STRATEGY, json);
                             }
+
+                            dialog.dismiss();
                         }
                     }
                 }).setTitle("提示").show();
@@ -460,6 +462,7 @@ public class StrategyPublishActivity extends AppCompatActivity {
                                 new CommonTask().execute(REMOVE_FOOD_FROM_LIST, body);
                                 doReFreshen();
                             }
+                            dialog.dismiss();
                         }
                     }).setTitle("警告").show();
                 }

@@ -7,24 +7,44 @@ import android.content.Intent;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.xtao.xindian.LoginActivity;
 import com.xtao.xindian.R;
 import com.xtao.xindian.activities.StrategyPublishActivity;
+import com.xtao.xindian.common.FoodStrategyResultType;
+import com.xtao.xindian.common.StrategiesResultType;
+import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.dialog.CommonDialog;
+import com.xtao.xindian.pojo.TbFood;
+import com.xtao.xindian.pojo.TbFoodStrategy;
 import com.xtao.xindian.pojo.TbStrategy;
 import com.xtao.xindian.pojo.TbUser;
 import com.xtao.xindian.utils.UserUtils;
+import com.xtao.xindian.utils.ValueUtils;
+import com.xtao.xindian.view.CircleImageView;
 import com.xtao.xindian.view.HorizontalListView;
+import com.xtao.xindian.view.RoundRectImageView;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,20 +52,35 @@ public class StarDelicateStrategyPageFragment extends Fragment {
 
     // hlv_delicate_strategy_user_list
     private HorizontalListView hlvDelicateStrategyUserList;
+    // 下的UI组件
+    private CircleImageView civRecommendIcon;
+    private TextView tvRecommendName;
+
     // tv_delicate_strategy_publish
     private TextView tvDelicateStrategyPublish;
     // lv_delicate_strategy_detail
     private ListView lvDelicateStrategyDetail;
+    // 下的UI组件
+    private RoundRectImageView rrivRecommendUserIcon;
+    private TextView tvRecommendUserName;
+    private TextView tvRecommendStrategyTitle;
+    private LinearLayout llRecommendPicLayout;
+    private ImageView ivRecommendMore;
+    private TextView tvRecommendStrategySum;
 
     private TbUser user;
+
+    private ProgressDialog progressDialog;
 
     // 网络请求
     private final String QUERY_RECOMMEND_USERS = HttpURL.IP_ADDRESS + "/strategy/queryRecommendUsers.json";
     private final String QUERY_RECOMMEND_STRATEGIES = HttpURL.IP_ADDRESS + "/strategy/queryRecommendStrategies.json";
 
     // 数据源
-    private List<TbUser> users;             // 推荐用户
-    private List<TbStrategy> strategies;    // 美食攻略
+    private List<TbStrategy> userStrategies;    //
+    private List<TbUser> users;                 // 推荐用户
+    private List<TbStrategy> strategies;        // 美食攻略
+    private List<List<TbFood>> recommendFoodListTotal;
 
 
     public StarDelicateStrategyPageFragment() {
@@ -76,11 +111,22 @@ public class StarDelicateStrategyPageFragment extends Fragment {
     }
 
     private void initView() {
-
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setTitle("正在加载");
+        progressDialog.setMessage("请稍后...");
+        progressDialog.setCancelable(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     }
 
     private void initData() {
+        userStrategies = new ArrayList<>();
+        users = new ArrayList<>();
+        strategies = new ArrayList<>();
 
+        // 1、获取推荐用户列表
+        new RecommendUsersTask().execute(QUERY_RECOMMEND_USERS, "");
+        // 2、获取美食攻略
+        new RecommendListTask().execute(QUERY_RECOMMEND_STRATEGIES, "");
     }
 
     private void initListener() {
@@ -111,4 +157,255 @@ public class StarDelicateStrategyPageFragment extends Fragment {
         });
     }
 
+    private class RecommendListTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(String message) {
+            super.onPostExecute(message);
+
+            lvDelicateStrategyDetail.setAdapter(new RecomendListAdapter());
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                URL url = new URL(strings[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                connection.setRequestMethod("POST");
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setUseCaches(false);
+                connection.connect();
+
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                        connection.getOutputStream(), "UTF-8"));
+                writer.write(strings[1]);
+                writer.close();
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {    // 200
+                    InputStream inputStream = connection.getInputStream();
+                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                    byte[] data = new byte[1024];
+                    int len = 0;
+                    while ((len = inputStream.read(data)) != -1) {
+                        outStream.write(data, 0, len);
+                    }
+                    inputStream.close();
+
+                    String jsonCode = new String(outStream.toByteArray());
+                    Gson gson = new Gson();
+
+                    FoodStrategyResultType resultType = gson.fromJson(jsonCode, FoodStrategyResultType.class);
+                    if (resultType.getState() == 1) {   // 找寻到标题信息
+                        strategies = resultType.getStrategies();
+                        recommendFoodListTotal = resultType.getFoods();
+
+                        return resultType.getMessage();
+                    } else {    // 没有相关的标题
+                        Looper.prepare();
+                        Toast.makeText(getContext(), "数据不正确，请重试", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                        return null;
+                    }
+
+                } else {    // 网络错误
+                    Looper.prepare();
+                    Toast.makeText(getContext(), "无法连接到服务器,请重试", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+    private class RecommendUsersTask extends AsyncTask<String, Integer, List<TbStrategy>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(List<TbStrategy> tbStrategies) {
+            super.onPostExecute(tbStrategies);
+            userStrategies = tbStrategies;
+            if (userStrategies.size() > 0) {
+                for (TbStrategy strategy : userStrategies) {
+                    users.add(strategy.getUser());
+                }
+
+                // 装配数据
+                hlvDelicateStrategyUserList.setAdapter(new RecommendUsersAdapter());
+            }
+
+            progressDialog.dismiss();
+        }
+
+        @Override
+        protected List<TbStrategy> doInBackground(String... strings) {
+            try {
+                URL url = new URL(strings[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                connection.setRequestMethod("POST");
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setUseCaches(false);
+                connection.connect();
+
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                        connection.getOutputStream(), "UTF-8"));
+                writer.write(strings[1]);
+                writer.close();
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {    // 200
+                    InputStream inputStream = connection.getInputStream();
+                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                    byte[] data = new byte[1024];
+                    int len = 0;
+                    while ((len = inputStream.read(data)) != -1) {
+                        outStream.write(data, 0, len);
+                    }
+                    inputStream.close();
+
+                    String jsonCode = new String(outStream.toByteArray());
+                    Gson gson = new Gson();
+
+                    StrategiesResultType resultType = gson.fromJson(jsonCode, StrategiesResultType.class);
+                    if (resultType.getState() == 1) {   // 找寻到标题信息
+                        return resultType.getStrategies();
+                    } else {    // 没有相关的标题
+                        Looper.prepare();
+                        Toast.makeText(getContext(), "数据不正确，请重试", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                        return null;
+                    }
+
+                } else {    // 网络错误
+                    Looper.prepare();
+                    Toast.makeText(getContext(), "无法连接到服务器,请重试", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+    private class RecomendListAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return strategies.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return strategies.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = View.inflate(getContext(), R.layout.layout_recomment_list, null);
+            rrivRecommendUserIcon = convertView.findViewById(R.id.rriv_recommend_user_icon);
+            String uHeadPortrait = strategies.get(position).getUser().getuHeadPortrait();
+            if (ValueUtils.isNull(uHeadPortrait)) {
+                new BitmapTask().execute(rrivRecommendUserIcon, HttpURL.USER_DEFAULT_PIC);
+            } else {
+                new BitmapTask().execute(rrivRecommendUserIcon, uHeadPortrait);
+            }
+            tvRecommendUserName = convertView.findViewById(R.id.tv_recommend_user_name);
+            tvRecommendUserName.setText(strategies.get(position).getUser().getuSignature());
+
+            tvRecommendStrategyTitle = convertView.findViewById(R.id.tv_recommend_strategy_title);
+            tvRecommendStrategyTitle.setText(strategies.get(position).getsName());
+
+            List<TbFood> foods = recommendFoodListTotal.get(position);
+            llRecommendPicLayout = convertView.findViewById(R.id.ll_recommend_pic_layout);
+            for (int i = 0; i < foods.size(); i++) {
+                ImageView image = new ImageView(getContext());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(75, 75);
+                lp.setMargins(0, 0, 5, 0);
+                image.setLayoutParams(lp);
+                String fUrl = foods.get(i).getfUrl();
+                if (ValueUtils.isNull(fUrl)) {
+                    new BitmapTask().execute(image, HttpURL.FOOD_DEFAULT_PIC);
+                } else {
+                    new BitmapTask().execute(image, fUrl);
+                }
+
+                llRecommendPicLayout.addView(image);
+            }
+            ivRecommendMore = convertView.findViewById(R.id.iv_recommend_more);
+            if (foods.size() < 3) {
+                ivRecommendMore.setVisibility(View.INVISIBLE);
+            }
+            tvRecommendStrategySum = convertView.findViewById(R.id.tv_recommend_strategy_sum);
+            tvRecommendStrategySum.setText("共推荐了" + foods.size() + "道菜品");
+
+            return convertView;
+        }
+
+    }
+
+    private class RecommendUsersAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return users.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return users.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = View.inflate(getContext(), R.layout.layout_recommend_user, null);
+            civRecommendIcon = convertView.findViewById(R.id.civ_recommend_icon);
+            String uHeadPortrait = users.get(position).getuHeadPortrait();
+            if (ValueUtils.isNull(uHeadPortrait)) {
+                new BitmapTask().execute(civRecommendIcon, HttpURL.USER_DEFAULT_PIC);
+            } else {
+                new BitmapTask().execute(civRecommendIcon, uHeadPortrait);
+            }
+
+            tvRecommendName = convertView.findViewById(R.id.tv_recommend_name);
+            String uSignature = users.get(position).getuSignature();
+            if (uSignature.length() > 8) {
+                uSignature.replace(uSignature.substring(8), "..");
+            }
+            tvRecommendName.setText(uSignature);
+
+            return convertView;
+        }
+    }
 }

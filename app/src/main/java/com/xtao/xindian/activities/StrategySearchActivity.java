@@ -98,7 +98,7 @@ public class StrategySearchActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {    // 回车点击事件搜索菜单
                     doSearchFoods();
                 }
-                return false;
+                return true;
             }
         });
     }
@@ -150,6 +150,7 @@ public class StrategySearchActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Toast.makeText(StrategySearchActivity.this, s, Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
         }
 
@@ -279,6 +280,7 @@ public class StrategySearchActivity extends AppCompatActivity {
 
                                 new CommonTask().execute(ADD_FOOD_TO_MY_STRATEGY, body);
                             }
+                            dialog.dismiss();
                         }
                     }).setTitle("提示").show();
                 }

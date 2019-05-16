@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="5dp"
+    android:layout_gravity="center_vertical"
+    android:layout_height="wrap_content">
+
+    <com.xtao.xindian.view.CircleImageView
+        android:id="@+id/civ_recommend_icon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/test"/>
+    <TextView
+        android:id="@+id/tv_recommend_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:maxEms="4"
+        android:textSize="14sp"
+        android:text="用户名被.."/>
+</LinearLayout>
