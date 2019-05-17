@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="2dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+
+    <TextView
+        android:layout_marginStart="15dp"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/tv_strategy_intro_name"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:textSize="18sp"
+        android:layout_height="wrap_content"
+        android:text="你好"/>
+
+    <TextView
+        android:id="@+id/tv_strategy_intro_time"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:textSize="13sp"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="2019年5月17 17:04:32"/>
+
+
+
+    <ImageView
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pic_strategy_food_right"/>
+</LinearLayout>

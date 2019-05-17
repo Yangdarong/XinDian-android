@@ -9,7 +9,7 @@ import com.xtao.xindian.fragment.homeDetailPage.HomeBakePageFragment;
 import com.xtao.xindian.fragment.homeDetailPage.HomeChoicePageFragment;
 import com.xtao.xindian.fragment.homeDetailPage.HomeWesternStylePageFragment;
 import com.xtao.xindian.fragment.homeDetailPage.HomeNewplayerPageFragment;
-import com.xtao.xindian.fragment.homeDetailPage.HomeNewtastePageFragment;
+import com.xtao.xindian.fragment.homeDetailPage.HomeNewTastePageFragment;
 import com.xtao.xindian.fragment.homeDetailPage.HomeSnackPageFragment;
 import com.xtao.xindian.fragment.homeDetailPage.HomeDrinkPageFragment;
 import com.xtao.xindian.pojo.TbTitle;
@@ -35,7 +35,7 @@ public class HomeTitleAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 1: return new HomeNewplayerPageFragment();
-            case 2: return new HomeNewtastePageFragment();
+            case 2: return new HomeNewTastePageFragment();
             case 3: return new HomeWesternStylePageFragment();
             case 4: return new HomeBakePageFragment();
             case 5: return new HomeSnackPageFragment();

@@ -23,6 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".LaunchActivity"
             android:theme="@style/AppTheme.NoActionBarWithBackGround">
@@ -76,6 +77,24 @@
             android:theme="@style/AppTheme.NoActionBarWithBackGround" />
         <activity
             android:name=".activities.StrategyInfoActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround" />
+        <activity
+            android:name=".fragment.infoDetailPage.MyDelicateStrategyActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround"/>
+        <activity
+            android:name=".fragment.infoDetailPage.MyCollectionActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround"/>
+        <activity
+            android:name=".fragment.infoDetailPage.MyFoodActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround"/>
+        <activity
+            android:name=".fragment.infoDetailPage.MyFollowActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround"/>
+        <activity
+            android:name=".fragment.infoDetailPage.RecentlyBrowseActivity"
+            android:theme="@style/AppTheme.NoActionBarWithBackGround"/>
+        <activity
+            android:name=".fragment.infoDetailPage.ExpressInfoActivity"
             android:theme="@style/AppTheme.NoActionBarWithBackGround"/>
 
         <meta-data

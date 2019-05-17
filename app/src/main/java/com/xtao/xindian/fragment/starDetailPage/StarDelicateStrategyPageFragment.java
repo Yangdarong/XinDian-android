@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.xtao.xindian.LoginActivity;
 import com.xtao.xindian.R;
+import com.xtao.xindian.activities.StrategyInfoActivity;
 import com.xtao.xindian.activities.StrategyPublishActivity;
 import com.xtao.xindian.common.FoodStrategyResultType;
 import com.xtao.xindian.common.StrategiesResultType;
@@ -29,7 +31,6 @@ import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.dialog.CommonDialog;
 import com.xtao.xindian.pojo.TbFood;
-import com.xtao.xindian.pojo.TbFoodStrategy;
 import com.xtao.xindian.pojo.TbStrategy;
 import com.xtao.xindian.pojo.TbUser;
 import com.xtao.xindian.utils.UserUtils;
@@ -122,6 +123,7 @@ public class StarDelicateStrategyPageFragment extends Fragment {
         userStrategies = new ArrayList<>();
         users = new ArrayList<>();
         strategies = new ArrayList<>();
+        recommendFoodListTotal = new ArrayList<>();
 
         // 1、获取推荐用户列表
         new RecommendUsersTask().execute(QUERY_RECOMMEND_USERS, "");
@@ -169,7 +171,21 @@ public class StarDelicateStrategyPageFragment extends Fragment {
         protected void onPostExecute(String message) {
             super.onPostExecute(message);
 
-            lvDelicateStrategyDetail.setAdapter(new RecomendListAdapter());
+            lvDelicateStrategyDetail.setAdapter(new RecommendListAdapter());
+            lvDelicateStrategyDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(getContext(), "你点击了=" + position, Toast.LENGTH_SHORT).show();
+                    // 跳转到对应的美食攻略详情页
+                    int sId = strategies.get(position).getsId();
+                    Intent intent = new Intent(getContext(), StrategyInfoActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("sId", sId);
+                    bundle.putInt("uId", user.getuId());
+
+                    startActivity(intent);
+                }
+            });
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
         }
@@ -309,7 +325,7 @@ public class StarDelicateStrategyPageFragment extends Fragment {
         }
     }
 
-    private class RecomendListAdapter extends BaseAdapter {
+    private class RecommendListAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -344,7 +360,7 @@ public class StarDelicateStrategyPageFragment extends Fragment {
 
             List<TbFood> foods = recommendFoodListTotal.get(position);
             llRecommendPicLayout = convertView.findViewById(R.id.ll_recommend_pic_layout);
-            for (int i = 0; i < foods.size(); i++) {
+            /*for (int i = 0; i < foods.size(); i++) {
                 ImageView image = new ImageView(getContext());
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(75, 75);
                 lp.setMargins(0, 0, 5, 0);
@@ -357,7 +373,54 @@ public class StarDelicateStrategyPageFragment extends Fragment {
                 }
 
                 llRecommendPicLayout.addView(image);
+            }*/
+            if (foods.size() == 1) {
+                for (int i = 0; i < foods.size(); i++) {
+                    ImageView image = new ImageView(getContext());
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(95, 95);
+                    lp.setMargins(5, 0, 5, 0);
+                    image.setLayoutParams(lp);
+                    String fUrl = foods.get(i).getfUrl();
+                    if (ValueUtils.isNull(fUrl)) {
+                        new BitmapTask().execute(image, HttpURL.FOOD_DEFAULT_PIC);
+                    } else {
+                        new BitmapTask().execute(image, fUrl);
+                    }
+
+                    llRecommendPicLayout.addView(image);
+                }
+            } else if (foods.size() < 3) {  // 展示三个
+                for (int i = 0; i < foods.size(); i++) {
+                    ImageView image = new ImageView(getContext());
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(95, 95);
+                    lp.setMargins(5, 0, 5, 0);
+                    image.setLayoutParams(lp);
+                    String fUrl = foods.get(i).getfUrl();
+                    if (ValueUtils.isNull(fUrl)) {
+                        new BitmapTask().execute(image, HttpURL.FOOD_DEFAULT_PIC);
+                    } else {
+                        new BitmapTask().execute(image, fUrl);
+                    }
+
+                    llRecommendPicLayout.addView(image);
+                }
+            } else {
+                for (int i = 0; i < 3; i++) {
+                    ImageView image = new ImageView(getContext());
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(95, 95);
+                    lp.setMargins(5, 0, 5, 0);
+                    image.setLayoutParams(lp);
+                    String fUrl = foods.get(i).getfUrl();
+                    if (ValueUtils.isNull(fUrl)) {
+                        new BitmapTask().execute(image, HttpURL.FOOD_DEFAULT_PIC);
+                    } else {
+                        new BitmapTask().execute(image, fUrl);
+                    }
+
+                    llRecommendPicLayout.addView(image);
+                }
             }
+
             ivRecommendMore = convertView.findViewById(R.id.iv_recommend_more);
             if (foods.size() < 3) {
                 ivRecommendMore.setVisibility(View.INVISIBLE);
