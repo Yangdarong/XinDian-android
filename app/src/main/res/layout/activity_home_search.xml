@@ -13,20 +13,22 @@
         android:background="@color/colorTheme"
         android:orientation="horizontal">
 
-        <android.support.v7.widget.SearchView
-            android:id="@+id/sv_home_search_view"
+        <EditText
+            android:id="@+id/et_home_search_keyword"
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:imeOptions="actionDone"
+            android:textSize="16sp"
+            android:layout_marginStart="5dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:layout_width="350dp"
-            android:layout_height="35dp"
-            android:background="@drawable/home_search_shape">
-
-        </android.support.v7.widget.SearchView>
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_white_shape"/>
 
         <TextView
             android:id="@+id/tv_home_search_cancel"
             android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="取消"
@@ -36,8 +38,8 @@
 
     <ListView
         android:id="@+id/lv_search_results"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     </ListView>
 </LinearLayout>

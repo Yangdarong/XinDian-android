@@ -26,7 +26,11 @@ public class ExpressInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_express_info);
 
         Bundle bundle = getIntent().getExtras();
-        page = bundle.getInt("page");
+        if (bundle != null) {
+            page = bundle.getInt("page");
+            uId = bundle.getInt("uId");
+        }
+
 
         initView();
         initData();
@@ -39,19 +43,22 @@ public class ExpressInfoActivity extends AppCompatActivity {
 
     private void initData() {
         List<TbTitle> titles = new ArrayList<>();
-        TbTitle title = new TbTitle();
+        TbTitle title1 = new TbTitle();
+        TbTitle title2 = new TbTitle();
+        TbTitle title3 = new TbTitle();
 
-        title.settName("待提交");
-        titles.add(title);
+        title1.settName("待确认");
+        titles.add(title1);
 
-        title.settName("待发货");
-        titles.add(title);
+        title2.settName("待发货");
+        titles.add(title2);
 
-        title.settName("待收货");
-        titles.add(title);
+        title3.settName("待收货");
+        titles.add(title3);
 
         vpExpressTabContent.setAdapter(new ExpressTitleAdapter(getSupportFragmentManager(), titles));
         tlExpressNav.setupWithViewPager(vpExpressTabContent);
+
         vpExpressTabContent.setCurrentItem(page);
     }
 }

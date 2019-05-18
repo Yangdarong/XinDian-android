@@ -244,6 +244,11 @@ public class BuycarFragment extends Fragment {
         }
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
     /**
      * 获取购物车列表中被选中的项目,刷新
      * @return
@@ -264,12 +269,28 @@ public class BuycarFragment extends Fragment {
         return list;
     }
 
+    /**
+     * 增加判断当前是否有食物
+     */
     private void toSettle() {
-        Intent intent = new Intent(getActivity(), BuycarSettleActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt("uId", user.getuId());
-        intent.putExtras(bundle);
-        startActivity(intent);
+        if (childList.size() == 0) {    // 没有可以结算的菜品
+            Toast.makeText(getContext(), "购物车没有内容", Toast.LENGTH_SHORT).show();
+        } else {
+            new CommonDialog(getContext(), R.style.DialogTheme, "是否确认订单,并进入结算?", new CommonDialog.OnCloseListener() {
+                @Override
+                public void onClick(Dialog dialog, boolean confirm) {
+                    if (confirm) {
+                        Intent intent = new Intent(getActivity(), BuycarSettleActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("uId", user.getuId());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                    }
+                    dialog.dismiss();
+                }
+            }).setTitle("提示").show();
+        }
     }
 
     private void modifyChildCheckList(boolean flag) {
@@ -421,7 +442,7 @@ public class BuycarFragment extends Fragment {
             picBuyCarFoodUrl = view.findViewById(R.id.pic_buycar_food_url);
             String foodIconUrl = childList.get(groupPosition).get(childPosition).getFood().getfUrl();
             if (ValueUtils.isNull(foodIconUrl)) {
-                new BitmapTask().execute(picBuyCarFoodUrl, HttpURL.MER_DEFAULT_PIC);
+                new BitmapTask().execute(picBuyCarFoodUrl, HttpURL.FOOD_DEFAULT_PIC);
             } else {
                 new BitmapTask().execute(picBuyCarFoodUrl, foodIconUrl);
             }
@@ -435,14 +456,18 @@ public class BuycarFragment extends Fragment {
             nvcBuyCarFoodItem.setValueChangeListener(new NumberControllerView.onNumChangedListener() {
                 @Override
                 public void addValueListener(View v, int value) {
+                    progressDialog.show();
                     new FoodNcvAddTask().execute(childList.get(groupPosition).get(childPosition));
+                    progressDialog.dismiss();
                     // 更新价格
                     new BuycarCostUpdateTask().execute(tvBuyCarMoney, user.getuId());
                 }
 
                 @Override
                 public void subValueListener(View v, int value) {
+                    progressDialog.show();
                     new FoodNcvSubTask().execute(childList.get(groupPosition).get(childPosition));
+                    progressDialog.dismiss();
                     // 更新价格
                     new BuycarCostUpdateTask().execute(tvBuyCarMoney, user.getuId());
                 }

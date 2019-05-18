@@ -63,6 +63,7 @@ public class FoodInfoActivity extends AppCompatActivity {
     private EditText etFoodInfoBuy;     // 购买
 
     private TbUser user;
+    private int uId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,7 @@ public class FoodInfoActivity extends AppCompatActivity {
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
             fId = bundle.getInt("fId");
+
         }
 
         initView();
@@ -112,7 +114,7 @@ public class FoodInfoActivity extends AppCompatActivity {
     private void initData() {
         new FoodAsyncTask().execute(URL);
         user = UserUtils.readLoginInfo(getApplicationContext());
-
+        uId = user.getuId();
         View view = getLayoutInflater().inflate(R.layout.layout_dialog_settle_food, null);
 
         dialog = new SettleFoodDialog(FoodInfoActivity.this, view, new SettleFoodDialog.OnCloseListener() {
@@ -175,7 +177,7 @@ public class FoodInfoActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Toast.makeText(getApplicationContext(), "添加购物车成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
         }
 
@@ -192,7 +194,7 @@ public class FoodInfoActivity extends AppCompatActivity {
                 connection.connect();
 
                 String body = "fId=" + fId + "&mId=" + food.getMer().getmId()
-                        + "&uId=" + user.getuId();
+                        + "&uId=" + user.getuId() + "&oState=1";
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                         connection.getOutputStream(), "UTF-8"));
                 writer.write(body);
@@ -219,13 +221,13 @@ public class FoodInfoActivity extends AppCompatActivity {
 
                     } else {    // 没有相关的标题
                         Looper.prepare();
-                        Toast.makeText(getApplicationContext(), "服务器数据丢失，请重试", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "服务器数据丢失，请重试错误:" + responseCode, Toast.LENGTH_SHORT).show();
                         Looper.loop();
                     }
 
                 } else {    // 网络错误
                     Looper.prepare();
-                    Toast.makeText(getApplicationContext(), "无法连接到服务器,请重试", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "无法连接到服务器,请重试" + responseCode, Toast.LENGTH_SHORT).show();
                     Looper.loop();
                 }
             } catch (Exception e) {

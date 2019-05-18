@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.xtao.xindian.LoginActivity;
 import com.xtao.xindian.R;
 import com.xtao.xindian.common.FoodStrategyResultType;
@@ -181,7 +182,7 @@ public class StrategyInfoActivity extends AppCompatActivity {
         // View当前PopupMenu显示的相对View的位置
         PopupMenu popupMenu = new PopupMenu(this, view);
         // menu布局
-        popupMenu.getMenuInflater().inflate(R.menu.main, popupMenu.getMenu());
+        popupMenu.getMenuInflater().inflate(R.menu.strategy, popupMenu.getMenu());
         // menu的item点击事件
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -247,10 +248,10 @@ public class StrategyInfoActivity extends AppCompatActivity {
             super.onPostExecute(s);
             Toast.makeText(StrategyInfoActivity.this, s, Toast.LENGTH_SHORT).show();
             // 装配数据
-            TbStrategy strategy = strategies.get(0);
-            foods = strategyFoods.get(0);
 
-            if (strategy != null) {
+            if (strategies != null) {
+                TbStrategy strategy = strategies.get(0);
+                foods = strategyFoods.get(0);
                 tvStrategyInfoTitle.setText(strategy.getsName());
                 Timestamp time = strategy.getsCreateTime();
                 tvStrategyInfoTime.setText(new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss", new Locale("zh", "ZH")).format(time));
@@ -275,6 +276,7 @@ public class StrategyInfoActivity extends AppCompatActivity {
                     }
                 }
             });
+            progressDialog.dismiss();
         }
 
         @Override
@@ -306,7 +308,7 @@ public class StrategyInfoActivity extends AppCompatActivity {
                     inputStream.close();
 
                     String jsonCode = new String(outStream.toByteArray());
-                    Gson gson = new Gson();
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
                     FoodStrategyResultType resultType = gson.fromJson(jsonCode, FoodStrategyResultType.class);
                     if (resultType.getState() == 1) {   // 找寻到标题信息

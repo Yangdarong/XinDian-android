@@ -100,6 +100,7 @@ public class InfoFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("uId", uId);
                     bundle.putInt("page", 0);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
                     loginDialog.show();
@@ -116,6 +117,7 @@ public class InfoFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("uId", uId);
                     bundle.putInt("page", 1);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
                     loginDialog.show();
@@ -131,6 +133,7 @@ public class InfoFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("uId", uId);
                     bundle.putInt("page", 2);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
                     loginDialog.show();
@@ -146,6 +149,7 @@ public class InfoFragment extends Fragment {
                     Intent intent = new Intent(getContext(), RecentlyBrowseActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("uId", uId);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
                     loginDialog.show();
@@ -161,6 +165,7 @@ public class InfoFragment extends Fragment {
                     Intent intent = new Intent(getContext(), MyFollowActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("uId", uId);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
                     loginDialog.show();
@@ -176,7 +181,7 @@ public class InfoFragment extends Fragment {
                     Intent intent = new Intent(getContext(), MyFoodActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("uId", uId);
-                    bundle.putInt("page", 0);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
                     loginDialog.show();
@@ -192,7 +197,7 @@ public class InfoFragment extends Fragment {
                     Intent intent = new Intent(getContext(), MyCollectionActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("uId", uId);
-
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
                     loginDialog.show();
@@ -208,7 +213,7 @@ public class InfoFragment extends Fragment {
                     Intent intent = new Intent(getContext(), MyDelicateStrategyActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("uId", uId);
-
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
                     loginDialog.show();

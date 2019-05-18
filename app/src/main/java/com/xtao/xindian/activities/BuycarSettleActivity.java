@@ -244,6 +244,7 @@ public class BuycarSettleActivity extends AppCompatActivity {
             // 页面跳转到订单确认页
             Intent intent = new Intent(BuycarSettleActivity.this, OrderConfirmActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
         }
 
         @Override
@@ -330,4 +331,9 @@ public class BuycarSettleActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+    }
 }

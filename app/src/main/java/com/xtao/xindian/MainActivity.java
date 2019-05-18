@@ -1,15 +1,19 @@
 package com.xtao.xindian;
 
+import android.app.Dialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import com.xtao.xindian.dialog.CommonDialog;
 import com.xtao.xindian.fragment.BuycarFragment;
 import com.xtao.xindian.fragment.HomeFragment;
 import com.xtao.xindian.fragment.InfoFragment;
@@ -164,6 +168,24 @@ public class MainActivity extends AppCompatActivity {
         mFragments.put(1, mStarFragment);
         mFragments.put(2, mFoodFragment);
         mFragments.put(3, mInfoFragment);
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            new CommonDialog(MainActivity.this, R.style.DialogTheme, "您确定要退出系统吗?", new CommonDialog.OnCloseListener() {
+                @Override
+                public void onClick(Dialog dialog, boolean confirm) {
+                    if (confirm) {
+                        System.exit(0);
+                    }
+                    dialog.dismiss();
+                }
+            }).setTitle("警告").show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
 
     }
 }

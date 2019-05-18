@@ -62,6 +62,8 @@ public class OrderConfirmActivity extends AppCompatActivity {
     // tv_order_confirm_usual
     private TextView tvOrderConfirmUsual;
 
+    private String body;
+
 
     // 网络地址
     // 查询用户地址请求
@@ -156,9 +158,18 @@ public class OrderConfirmActivity extends AppCompatActivity {
                     resultType.setState(1);
                     resultType.setOrder(order);
                     Gson gson = new Gson();
-                    String body = gson.toJson(resultType);
+                    body = gson.toJson(resultType);
                     // 执行订单的更新
-                    new OrderInfoConfirmTask().execute(UPDATE_ORDER_INFO, body);
+
+                    new CommonDialog(OrderConfirmActivity.this, R.style.DialogTheme, "确认提交并支付这笔订单?", new CommonDialog.OnCloseListener() {
+                        @Override
+                        public void onClick(Dialog dialog, boolean confirm) {
+                            if (confirm) {
+                                new OrderInfoConfirmTask().execute(UPDATE_ORDER_INFO, body);
+                            }
+                            dialog.dismiss();
+                        }
+                    }).setTitle("请确认").show();
                 } else {
                     new CommonDialog(OrderConfirmActivity.this, R.style.DialogTheme, "订单信息填写错误,请及时检查", new CommonDialog.OnCloseListener() {
                         @Override
@@ -260,8 +271,10 @@ public class OrderConfirmActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             progressDialog.dismiss();
+
             Intent intent = new Intent(OrderConfirmActivity.this, PaySuccessfulActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
         }
 
         @Override
@@ -281,6 +294,7 @@ public class OrderConfirmActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
         }
 

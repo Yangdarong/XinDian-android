@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="购物车是空的,赶紧下单把~"
+            android:text="购物车是空的,赶紧下单吧~"
             android:textSize="22sp" />
 
         <ExpandableListView

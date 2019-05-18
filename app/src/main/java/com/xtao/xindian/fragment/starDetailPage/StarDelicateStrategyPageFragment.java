@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.xtao.xindian.LoginActivity;
 import com.xtao.xindian.R;
 import com.xtao.xindian.activities.StrategyInfoActivity;
@@ -100,7 +102,7 @@ public class StarDelicateStrategyPageFragment extends Fragment {
         hlvDelicateStrategyUserList = view.findViewById(R.id.hlv_delicate_strategy_user_list);
         lvDelicateStrategyDetail = view.findViewById(R.id.lv_delicate_strategy_detail);
         initView();
-        initData();
+        //initData();
         initListener();
         return view;
     }
@@ -182,7 +184,7 @@ public class StarDelicateStrategyPageFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("sId", sId);
                     bundle.putInt("uId", user.getuId());
-
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 }
             });
@@ -219,7 +221,7 @@ public class StarDelicateStrategyPageFragment extends Fragment {
                     inputStream.close();
 
                     String jsonCode = new String(outStream.toByteArray());
-                    Gson gson = new Gson();
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
                     FoodStrategyResultType resultType = gson.fromJson(jsonCode, FoodStrategyResultType.class);
                     if (resultType.getState() == 1) {   // 找寻到标题信息
@@ -374,10 +376,12 @@ public class StarDelicateStrategyPageFragment extends Fragment {
 
                 llRecommendPicLayout.addView(image);
             }*/
+            int width = 280;
+            int height = 320;
             if (foods.size() == 1) {
                 for (int i = 0; i < foods.size(); i++) {
                     ImageView image = new ImageView(getContext());
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(95, 95);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
                     lp.setMargins(5, 0, 5, 0);
                     image.setLayoutParams(lp);
                     String fUrl = foods.get(i).getfUrl();
@@ -392,7 +396,7 @@ public class StarDelicateStrategyPageFragment extends Fragment {
             } else if (foods.size() < 3) {  // 展示三个
                 for (int i = 0; i < foods.size(); i++) {
                     ImageView image = new ImageView(getContext());
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(95, 95);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
                     lp.setMargins(5, 0, 5, 0);
                     image.setLayoutParams(lp);
                     String fUrl = foods.get(i).getfUrl();
@@ -407,7 +411,7 @@ public class StarDelicateStrategyPageFragment extends Fragment {
             } else {
                 for (int i = 0; i < 3; i++) {
                     ImageView image = new ImageView(getContext());
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(95, 95);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
                     lp.setMargins(5, 0, 5, 0);
                     image.setLayoutParams(lp);
                     String fUrl = foods.get(i).getfUrl();
