@@ -1,11 +1,14 @@
 package com.xtao.xindian.fragment.infoDetailPage;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,6 +25,8 @@ import com.xtao.xindian.common.FoodsResultType;
 import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.value.HttpURL;
 import com.xtao.xindian.pojo.TbFood;
+import com.xtao.xindian.pojo.TbUser;
+import com.xtao.xindian.utils.UserUtils;
 import com.xtao.xindian.utils.ValueUtils;
 import com.xtao.xindian.view.CircleImageView;
 import com.xtao.xindian.view.RoundRectImageView;
@@ -34,6 +39,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class WaitConfirmPageFragment extends Fragment {
@@ -51,8 +57,9 @@ public class WaitConfirmPageFragment extends Fragment {
     private CircleImageView civMerIcon;
     private TextView tvMerName;
     private EditText etFoodBuy;
+    private int uId;
 
-    private final String QURRY_WAIT_CONFIRM = HttpURL.IP_ADDRESS;
+    private final String QUERY_WAIT_CONFIRM = HttpURL.IP_ADDRESS + "/order/queryWait.json";
 
     private ProgressDialog progressDialog;
 
@@ -64,10 +71,14 @@ public class WaitConfirmPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wait_confirm_page, container, false);
+        llWaitConfirm = view.findViewById(R.id.ll_wait_confirm);
         tvWaitNon = view.findViewById(R.id.tv_wait_non);
         lvWaitConfirm = view.findViewById(R.id.lv_wait_confirm);
         initView();
-
+        TbUser user = UserUtils.readLoginInfo(Objects.requireNonNull(getContext()));
+        if (user.getuId() != 0) {
+            uId = user.getuId();
+        }
         return view;
     }
 
@@ -79,8 +90,8 @@ public class WaitConfirmPageFragment extends Fragment {
 
     private void initDate() {
         foods = new ArrayList<>();
-        String body = "";
-        new WaitConfirmTask().execute(QURRY_WAIT_CONFIRM, body);
+        String body = "uId=" +  uId + "&oState=" + 4;
+        new WaitConfirmTask().execute(QUERY_WAIT_CONFIRM, body);
     }
 
     private void initView() {
@@ -103,6 +114,7 @@ public class WaitConfirmPageFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (foods.size() != 0) {
+                llWaitConfirm.removeView(tvWaitNon);
                 lvWaitConfirm.setAdapter(new WaitConfirmAdapter());
             }
             progressDialog.dismiss();
@@ -202,8 +214,56 @@ public class WaitConfirmPageFragment extends Fragment {
             tvMerName = convertView.findViewById(R.id.tv_mer_name);
             tvMerName.setText(foods.get(position).getMer().getmName());
             etFoodBuy = convertView.findViewById(R.id.et_food_buy);
+            etFoodBuy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showPopupMenu(etFoodBuy);
+                }
+            });
             return convertView;
         }
     }
 
+    private void showPopupMenu(View view) {
+        // View当前PopupMenu显示的相对View的位置
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        // menu布局
+        popupMenu.getMenuInflater().inflate(R.menu.wait, popupMenu.getMenu());
+        // menu的item点击事件
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_remind:
+                        Toast.makeText(getContext(), "已通知商家", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.action_cancel:
+                        /*new CommonDialog(getContext(), R.style.DialogTheme, "是否接收订单?", new CommonDialog.OnCloseListener() {
+                            @Override
+                            public void onClick(Dialog dialog, boolean confirm) {
+                                if (confirm) {
+                                    // 修改订单状态
+                                }
+                                dialog.dismiss();
+                            }
+                        }).setTitle("提示").show();*/
+                        Toast.makeText(getContext(), "已通知商家", Toast.LENGTH_SHORT).show();
+                        break;
+
+                }
+
+                //Toast.makeText(getApplicationContext(), item.get, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+        // PopupMenu关闭事件
+        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+                // Toast.makeText(getApplicationContext(), "关闭PopupMenu", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        popupMenu.show();
+    }
 }

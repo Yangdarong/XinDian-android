@@ -531,6 +531,12 @@ public class BuycarFragment extends Fragment {
     private class BuyCarAsyncTask extends AsyncTask<String, Integer, String> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
+        }
+
+        @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (orderFoods.size() != 0) {
@@ -551,6 +557,8 @@ public class BuycarFragment extends Fragment {
             } else {
 
             }
+
+            progressDialog.dismiss();
         }
 
         @Override

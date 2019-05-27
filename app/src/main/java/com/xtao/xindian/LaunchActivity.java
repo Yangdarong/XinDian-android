@@ -46,7 +46,6 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void run() {
                 // 跳转到首页面
-                Toast.makeText(getApplicationContext(), "进入用户主页", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LaunchActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -82,7 +81,8 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()) {
             case R.id.btn_seller_login :
                 // 跳转到商家
-                Toast.makeText(getApplicationContext(), "点击跳过", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LaunchActivity.this, MainActivity.class);
+                startActivity(intent);
                 finish();
                 if (runnable != null) {
                     handler.removeCallbacks(runnable);

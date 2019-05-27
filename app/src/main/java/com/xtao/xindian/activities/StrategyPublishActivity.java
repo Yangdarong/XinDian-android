@@ -362,7 +362,6 @@ public class StrategyPublishActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            sId = integer;
             progressDialog.dismiss();
         }
 
@@ -400,7 +399,7 @@ public class StrategyPublishActivity extends AppCompatActivity {
                     StrategiesResultType resultType = gson.fromJson(jsonCode, StrategiesResultType.class);
                     if (resultType.getState() == 1) {   // 找寻到标题信息
                         List<TbStrategy> strategies = resultType.getStrategies();
-
+                        sId = strategies.get(0).getsId();
                         return strategies.get(0).getsId();
                     } else {    // 没有相关的标题
                         Looper.prepare();
