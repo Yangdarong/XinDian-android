@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -116,6 +117,12 @@ public class WaitConfirmPageFragment extends Fragment {
             if (foods.size() != 0) {
                 llWaitConfirm.removeView(tvWaitNon);
                 lvWaitConfirm.setAdapter(new WaitConfirmAdapter());
+                lvWaitConfirm.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        showPopupMenu(view);
+                    }
+                });
             }
             progressDialog.dismiss();
         }
@@ -214,12 +221,8 @@ public class WaitConfirmPageFragment extends Fragment {
             tvMerName = convertView.findViewById(R.id.tv_mer_name);
             tvMerName.setText(foods.get(position).getMer().getmName());
             etFoodBuy = convertView.findViewById(R.id.et_food_buy);
-            etFoodBuy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showPopupMenu(etFoodBuy);
-                }
-            });
+            etFoodBuy.setVisibility(View.INVISIBLE);
+
             return convertView;
         }
     }
@@ -238,21 +241,12 @@ public class WaitConfirmPageFragment extends Fragment {
                         Toast.makeText(getContext(), "已通知商家", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_cancel:
-                        /*new CommonDialog(getContext(), R.style.DialogTheme, "是否接收订单?", new CommonDialog.OnCloseListener() {
-                            @Override
-                            public void onClick(Dialog dialog, boolean confirm) {
-                                if (confirm) {
-                                    // 修改订单状态
-                                }
-                                dialog.dismiss();
-                            }
-                        }).setTitle("提示").show();*/
+
                         Toast.makeText(getContext(), "已通知商家", Toast.LENGTH_SHORT).show();
                         break;
 
                 }
 
-                //Toast.makeText(getApplicationContext(), item.get, Toast.LENGTH_SHORT).show();
                 return false;
             }
         });

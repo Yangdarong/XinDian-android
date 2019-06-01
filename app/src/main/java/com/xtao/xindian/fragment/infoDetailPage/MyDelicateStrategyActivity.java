@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.xtao.xindian.R;
 import com.xtao.xindian.activities.StrategyInfoActivity;
 import com.xtao.xindian.common.StrategiesResultType;
@@ -174,7 +175,9 @@ public class MyDelicateStrategyActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            lvMyStrategyList.setAdapter(new MyStrategiesAdapter());
+            if (strategies != null) {
+                lvMyStrategyList.setAdapter(new MyStrategiesAdapter());
+            }
 
             progressDialog.dismiss();
         }
@@ -208,7 +211,7 @@ public class MyDelicateStrategyActivity extends AppCompatActivity {
                     inputStream.close();
 
                     String jsonCode = new String(outStream.toByteArray());
-                    Gson gson = new Gson();
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
                     StrategiesResultType resultType = gson.fromJson(jsonCode, StrategiesResultType.class);
                     if (resultType.getState() == 1) {   // 找寻到标题信息

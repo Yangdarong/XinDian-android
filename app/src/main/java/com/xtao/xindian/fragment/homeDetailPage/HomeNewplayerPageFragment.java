@@ -2,7 +2,7 @@ package com.xtao.xindian.fragment.homeDetailPage;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
@@ -10,15 +10,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.xtao.xindian.R;
+import com.xtao.xindian.activities.FoodInfoActivity;
 import com.xtao.xindian.common.FoodsResultType;
+import com.xtao.xindian.common.task.BitmapTask;
 import com.xtao.xindian.common.value.HttpURL;
-import com.xtao.xindian.fragment.adapter.FoodListAdapter;
 import com.xtao.xindian.pojo.TbFood;
+import com.xtao.xindian.view.CircleImageView;
+import com.xtao.xindian.view.RoundRectImageView;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -27,6 +33,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 
 
 public class HomeNewplayerPageFragment extends Fragment {
@@ -73,6 +80,91 @@ public class HomeNewplayerPageFragment extends Fragment {
         new FlAsyncTask().execute(URL);
     }
 
+    private class FoodListAdapter extends BaseAdapter {
+        private LayoutInflater mLayoutInflater;
+        private TbFood food;
+        private String picUrl;
+
+        public FoodListAdapter(Context context) {
+            mLayoutInflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public int getCount() {
+            return foods.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return foods.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            convertView = mLayoutInflater.inflate(R.layout.food_item, null);
+            food = (TbFood) getItem(position);
+
+            RoundRectImageView picFood = convertView.findViewById(R.id.pic_food);
+            // 图片需要下载
+            if (food.getfUrl() == null || food.getfUrl().equals(""))  // 未设置图片
+                picUrl = HttpURL.FOOD_DEFAULT_PIC;
+            else     // 设置了图片
+                picUrl = food.getfUrl();
+            new BitmapTask().execute(picFood, picUrl);
+
+            TextView tvFoodName = convertView.findViewById(R.id.tv_food_name);
+            tvFoodName.setText(food.getfName());
+
+            TextView tvFoodType = convertView.findViewById(R.id.tv_food_type);
+            tvFoodType.setText(food.getFoodType().getFtName());
+
+            TextView tvFoodDprice = convertView.findViewById(R.id.tv_food_dprice);
+            String oPrice = tvFoodDprice.getText().toString();
+            String nPrice = oPrice.replace(oPrice.substring(1, oPrice.length()), food.getfDPrice().toString());
+
+            tvFoodDprice.setText(nPrice);
+
+            CircleImageView picUserIcon = convertView.findViewById(R.id.pic_user_icon);
+            if (food.getMer().getmUrl() == null || food.getMer().getmUrl().equals("")) {
+                picUrl = HttpURL.MER_DEFAULT_PIC;
+            } else {
+                picUrl = food.getMer().getmUrl();
+            }
+            new BitmapTask().execute(picUserIcon, picUrl);
+
+            TextView tvMerName = convertView.findViewById(R.id.tv_mer_name);
+            tvMerName.setText(food.getMer().getmName());
+
+//            et_food_buy 为按钮添加点击事件
+            EditText etFoodBuy = convertView.findViewById(R.id.et_food_buy);
+            View.OnClickListener doGetFoodInfoListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 获取菜品ID 存入bundle
+                    int fId = ((TbFood) getItem(position)).getfId();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("fId", fId);
+                    Intent intent = new Intent(getActivity(), FoodInfoActivity.class);
+                    intent.putExtras(bundle);
+                    // 页面跳转
+                    startActivity(intent);
+                    //Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
+                    Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                    //Toast.makeText(v.getContext(), "你拿到的菜品ID是:" + ((TbFood) getItem(position)).getfId(), Toast.LENGTH_SHORT).show();
+                }
+            };
+            etFoodBuy.setOnClickListener(doGetFoodInfoListener);
+
+            return convertView;
+        }
+
+    }
+
     private class FlAsyncTask extends AsyncTask<String, Integer, List<TbFood>> {
 
         @Override
@@ -87,7 +179,7 @@ public class HomeNewplayerPageFragment extends Fragment {
 
             // 装配数据
             foods = tbFoods;
-            mAdapter = new FoodListAdapter(getContext(), foods, view, fragment);
+            mAdapter = new FoodListAdapter(getContext());
             lvPlayerFoodList.setAdapter(mAdapter);
 
             progressDialog.dismiss();

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -121,6 +122,12 @@ public class WaitDeliverPageFragment extends Fragment {
             if (foods.size() != 0) {
                 llWaitDeliver.removeView(tvWaitNon);
                 lvWaitDeliver.setAdapter(new WaitConfirmAdapter());
+                lvWaitDeliver.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        showPopupMenu(view);
+                    }
+                });
             }
             progressDialog.dismiss();
         }
@@ -219,12 +226,7 @@ public class WaitDeliverPageFragment extends Fragment {
             tvMerName = convertView.findViewById(R.id.tv_mer_name);
             tvMerName.setText(foods.get(position).getMer().getmName());
             etFoodBuy = convertView.findViewById(R.id.et_food_buy);
-            etFoodBuy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showPopupMenu(etFoodBuy);
-                }
-            });
+            etFoodBuy.setVisibility(View.INVISIBLE);
             return convertView;
         }
     }

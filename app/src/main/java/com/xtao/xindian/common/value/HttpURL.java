@@ -18,10 +18,10 @@ import java.net.URL;
 
 public class HttpURL {
 
-     //public static final String IP_ADDRESS = "http://192.168.0.117:8080/xindian";
+     public static final String IP_ADDRESS = "http://192.168.0.120:8080/xindian";
      //public static final String IP_ADDRESS = "http://172.24.94.178:8080/xindian";
      //public static final String IP_ADDRESS = "http://120.78.218.188:8080/xindian";
-     public static final String IP_ADDRESS = "http://192.168.1.103:8080/xindian";
+     //public static final String IP_ADDRESS = "http://192.168.1.103:8080/xindian";
 
      public static final String MER_DEFAULT_PIC = "/upload/mers/default.png";
      public static final String FOOD_DEFAULT_PIC = "/upload/foods/default.png";
