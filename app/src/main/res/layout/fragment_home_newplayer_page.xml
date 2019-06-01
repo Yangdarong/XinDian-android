@@ -6,9 +6,9 @@
     tools:context=".fragment.homeDetailPage.HomeNewplayerPageFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ListView
+        android:id="@+id/lv_player_food_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent"></ListView>
 
 </FrameLayout>

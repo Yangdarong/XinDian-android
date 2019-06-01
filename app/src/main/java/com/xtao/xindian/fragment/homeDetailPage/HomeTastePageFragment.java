@@ -38,8 +38,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
-public class HomeNewTastePageFragment extends Fragment {
-
+public class HomeTastePageFragment extends Fragment {
     // lv_new_taste_list
     private ListView lvNewTasteList;
     // 下的UI控件
@@ -61,7 +60,7 @@ public class HomeNewTastePageFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
-    public HomeNewTastePageFragment() {
+    public HomeTastePageFragment() {
         // Required empty public constructor
     }
 
@@ -218,7 +217,7 @@ public class HomeNewTastePageFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("fId", fId);
 
-                    // 页面跳转
+                    // 跳转
                     if (UserUtils.isLogined(getContext())) {
                         Intent intent = new Intent(getContext(), FoodInfoActivity.class);
                         intent.putExtras(bundle);

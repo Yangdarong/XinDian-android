@@ -177,7 +177,6 @@ public class StarDelicateStrategyPageFragment extends Fragment {
             lvDelicateStrategyDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(getContext(), "你点击了=" + position, Toast.LENGTH_SHORT).show();
                     // 跳转到对应的美食攻略详情页
                     int sId = strategies.get(position).getsId();
                     Intent intent = new Intent(getContext(), StrategyInfoActivity.class);

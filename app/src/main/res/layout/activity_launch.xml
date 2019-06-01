@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_circle_shape"
-            android:text="@string/seller_login"
+            android:text="跳过"
             android:textColor="#FFF"
             android:textSize="16sp"/>
     </LinearLayout>
