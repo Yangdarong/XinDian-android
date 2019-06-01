@@ -2,6 +2,7 @@ package com.xtao.xindian.fragment.infoDetailPage;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,20 @@ public class RecentlyBrowseActivity extends AppCompatActivity {
         ivSysBack = findViewById(R.id.iv_sys_back);
         tvTitleName = findViewById(R.id.tv_title_name);
 
+        initView();
+        initListener();
+    }
 
+    private void initView() {
+        tvTitleName.setText("最近浏览");
+    }
+
+    private void initListener() {
+        ivSysBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }
