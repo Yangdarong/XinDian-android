@@ -111,6 +111,7 @@ public class MyDelicateStrategyActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putInt("uId", uId);
                     bundle.putInt("sId", sId);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 }
             }
@@ -120,7 +121,7 @@ public class MyDelicateStrategyActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 showPopupMenu(view);
-                return false;
+                return true;
             }
         });
     }
